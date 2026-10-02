@@ -3,6 +3,16 @@
 Site estático (HTML, CSS e JavaScript puro, sem build). Basta publicar a pasta
 inteira em qualquer hospedagem estática.
 
+Para gerar o site em **um único arquivo HTML** (fácil de enviar e abrir com dois
+cliques, sem internet e sem instalar nada):
+
+```bash
+node scripts/gerar-arquivo-unico.js   # cria entrega/academia-base-ii-site.html
+```
+
+O arquivo já leva CSS, JavaScript e imagens embutidos. Gere-o de novo sempre que
+mudar o número do WhatsApp, as mensagens ou as fotos.
+
 ## ⚠️ Antes de publicar (obrigatório)
 
 1. **Número do WhatsApp** — abra `js/config.js` e preencha `whatsappNumero` com o
