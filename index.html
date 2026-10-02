@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Academia Base II — Musculação, Jiu-jitsu, Muay Thai, Judô e Piscina</title>
+  <meta name="description" content="Academia Base II: musculação, jiu-jitsu com a Equipe Renan Rocha, Muay Thai, Judô e atividades aquáticas. Fale conosco pelo WhatsApp.">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+  <!-- Ícone oficial do WhatsApp (reutilizado em todos os botões) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="icone-whatsapp" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+    </symbol>
+  </svg>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="container topo__linha">
+      <a class="marca" href="#inicio" aria-label="Academia Base II — início">
+        ACADEMIA <span>BASE II</span>
+      </a>
+      <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu">
+        <span class="sr-only">Abrir menu</span>
+        <span class="menu-botao__barras" aria-hidden="true"></span>
+      </button>
+      <nav id="menu" class="menu" aria-label="Navegação principal">
+        <a href="#modalidades">Modalidades</a>
+        <a href="#jiu-jitsu">Equipe Renan Rocha</a>
+        <a href="#contato">Contato</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <!-- ================= HERO ================= -->
+    <section id="inicio" class="hero">
+      <div class="container hero__conteudo">
+        <p class="sobretitulo">Academia Base II</p>
+        <h1>Treine forte.<br><span>Encontre a sua modalidade.</span></h1>
+        <p class="hero__texto">Musculação, jiu-jitsu com a Equipe Renan Rocha, Muay Thai, Judô e atividades aquáticas em um só lugar.</p>
+        <a class="btn btn--laranja" href="#modalidades">Conheça as modalidades</a>
+      </div>
+    </section>
+
+    <!-- ================= MODALIDADES ================= -->
+    <section id="modalidades" class="secao modalidades" aria-labelledby="modalidades-titulo">
+      <div class="container">
+        <header class="secao__cabecalho">
+          <p class="sobretitulo">O que você pode treinar</p>
+          <h2 id="modalidades-titulo">Modalidades</h2>
+        </header>
+
+        <!-- Destaque principal: Jiu-jitsu / Equipe Renan Rocha -->
+        <article id="jiu-jitsu" class="modalidade modalidade--destaque" aria-labelledby="mod-jiu-jitsu">
+          <figure class="midia">
+            <!-- Foto oficial: salve em assets/img/modalidades/jiu-jitsu.jpg -->
+            <img src="assets/img/modalidades/jiu-jitsu.jpg"
+                 data-referencia="assets/img/referencia/jiu-jitsu.svg"
+                 alt="Atletas da Equipe Renan Rocha treinando jiu-jitsu no tatame"
+                 width="1200" height="800" loading="lazy" decoding="async">
+          </figure>
+          <div class="modalidade__corpo">
+            <p class="selo">Equipe Renan Rocha</p>
+            <h3 id="mod-jiu-jitsu">Jiu-jitsu</h3>
+            <p>Técnica, disciplina e evolução no tatame com a <strong>Equipe Renan Rocha</strong>. Treinos que desenvolvem defesa pessoal, condicionamento físico e confiança dentro e fora do tatame.</p>
+            <a class="btn btn--laranja" data-whatsapp="jiu-jitsu" href="#"
+               aria-label="Tenho interesse em Jiu-jitsu com a Equipe Renan Rocha — conversar pelo WhatsApp">
+              <svg class="btn__icone" aria-hidden="true"><use href="#icone-whatsapp"/></svg>
+              TENHO INTERESSE
+            </a>
+          </div>
+        </article>
+
+        <div class="modalidades__grade">
+          <article id="musculacao" class="modalidade" aria-labelledby="mod-musculacao">
+            <figure class="midia">
+              <img src="assets/img/modalidades/musculacao.jpg"
+                   data-referencia="assets/img/referencia/musculacao.svg"
+                   alt="Área de musculação com equipamentos de treino"
+                   width="800" height="600" loading="lazy" decoding="async">
+            </figure>
+            <div class="modalidade__corpo">
+              <h3 id="mod-musculacao">Musculação</h3>
+              <p>Treinamento físico com equipamentos de academia para ganho de força, resistência e qualidade de vida.</p>
+              <a class="btn btn--contorno" data-whatsapp="musculacao" href="#"
+                 aria-label="Tenho interesse em Musculação — conversar pelo WhatsApp">
+                <svg class="btn__icone" aria-hidden="true"><use href="#icone-whatsapp"/></svg>
+                TENHO INTERESSE
+              </a>
+            </div>
+          </article>
+
+          <article id="muay-thai" class="modalidade" aria-labelledby="mod-muay-thai">
+            <figure class="midia">
+              <img src="assets/img/modalidades/muay-thai.jpg"
+                   data-referencia="assets/img/referencia/muay-thai.svg"
+                   alt="Treino de Muay Thai com luvas e aparador"
+                   width="800" height="600" loading="lazy" decoding="async">
+            </figure>
+            <div class="modalidade__corpo">
+              <h3 id="mod-muay-thai">Muay Thai</h3>
+              <p>Modalidade de luta e treinamento técnico, com golpes de punhos, cotovelos, joelhos e pernas.</p>
+              <a class="btn btn--contorno" data-whatsapp="muay-thai" href="#"
+                 aria-label="Tenho interesse em Muay Thai — conversar pelo WhatsApp">
+                <svg class="btn__icone" aria-hidden="true"><use href="#icone-whatsapp"/></svg>
+                TENHO INTERESSE
+              </a>
+            </div>
+          </article>
+
+          <article id="judo" class="modalidade" aria-labelledby="mod-judo">
+            <figure class="midia">
+              <img src="assets/img/modalidades/judo.jpg"
+                   data-referencia="assets/img/referencia/judo.svg"
+                   alt="Judocas de quimono executando uma técnica de projeção"
+                   width="800" height="600" loading="lazy" decoding="async">
+            </figure>
+            <div class="modalidade__corpo">
+              <h3 id="mod-judo">Judô</h3>
+              <p>Arte marcial com técnicas de projeção e imobilização, que trabalha equilíbrio, respeito e controle.</p>
+              <a class="btn btn--contorno" data-whatsapp="judo" href="#"
+                 aria-label="Tenho interesse em Judô — conversar pelo WhatsApp">
+                <svg class="btn__icone" aria-hidden="true"><use href="#icone-whatsapp"/></svg>
+                TENHO INTERESSE
+              </a>
+            </div>
+          </article>
+
+          <article id="piscina" class="modalidade" aria-labelledby="mod-piscina">
+            <figure class="midia">
+              <img src="assets/img/modalidades/piscina.jpg"
+                   data-referencia="assets/img/referencia/piscina.svg"
+                   alt="Piscina da Academia Base II"
+                   width="800" height="600" loading="lazy" decoding="async">
+            </figure>
+            <div class="modalidade__corpo">
+              <h3 id="mod-piscina">Piscina e atividades aquáticas</h3>
+              <p>Atividades na piscina da academia. Pergunte pelo WhatsApp quais atividades aquáticas estão disponíveis.</p>
+              <!-- Preenchida a partir de atividadesAquaticas em js/config.js (somente atividades confirmadas) -->
+              <ul id="atividades-aquaticas" class="lista-tags" aria-label="Atividades aquáticas oferecidas" hidden></ul>
+              <a class="btn btn--contorno" data-whatsapp="piscina" href="#"
+                 aria-label="Tenho interesse em Piscina e atividades aquáticas — conversar pelo WhatsApp">
+                <svg class="btn__icone" aria-hidden="true"><use href="#icone-whatsapp"/></svg>
+                TENHO INTERESSE
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CHAMADA FINAL ================= -->
+    <section id="contato" class="chamada" aria-labelledby="chamada-titulo">
+      <figure class="chamada__foto midia">
+        <!-- Foto real da academia ou da equipe: salve em assets/img/equipe.jpg -->
+        <img src="assets/img/equipe.jpg"
+             data-referencia="assets/img/referencia/equipe.svg"
+             alt="Equipe da Academia Base II reunida no tatame"
+             width="1600" height="900" loading="lazy" decoding="async">
+      </figure>
+      <div class="container chamada__conteudo">
+        <span class="chamada__traco" aria-hidden="true"></span>
+        <h2 id="chamada-titulo">SEU PRÓXIMO PASSO <span>COMEÇA AQUI.</span></h2>
+        <p>Escolha sua modalidade, conheça nossa estrutura e venha descobrir o seu espaço na Academia Base II.</p>
+        <a class="btn btn--laranja btn--grande" data-whatsapp="chamada-final" href="#"
+           aria-label="Falar com a academia pelo WhatsApp">
+          <svg class="btn__icone" aria-hidden="true"><use href="#icone-whatsapp"/></svg>
+          FALAR COM A ACADEMIA PELO WHATSAPP
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container">
+      <p>© <span id="ano">2026</span> Academia Base II. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- ================= BOTÃO FLUTUANTE DO WHATSAPP ================= -->
+  <a class="whatsapp-flutuante" data-whatsapp="geral" href="#"
+     aria-label="Fale conosco pelo WhatsApp">
+    <svg class="whatsapp-flutuante__icone" aria-hidden="true"><use href="#icone-whatsapp"/></svg>
+    <span class="whatsapp-flutuante__texto" aria-hidden="true">Fale conosco</span>
+  </a>
+
+  <div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/whatsapp.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
