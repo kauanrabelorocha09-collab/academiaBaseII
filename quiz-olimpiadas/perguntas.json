@@ -1,0 +1,52 @@
+[
+    {
+        "pergunta": "Em que cidade foram realizados os primeiros Jogos Olímpicos da Era Moderna, em 1896?",
+        "opcoes": ["Paris", "Atenas", "Londres", "Roma"],
+        "correta": 1
+    },
+    {
+        "pergunta": "Quantos anéis compõem o símbolo olímpico?",
+        "opcoes": ["4", "5", "6", "7"],
+        "correta": 1
+    },
+    {
+        "pergunta": "Quem é considerado o fundador dos Jogos Olímpicos modernos?",
+        "opcoes": ["Pierre de Coubertin", "Juan Antonio Samaranch", "Thomas Bach", "Avery Brundage"],
+        "correta": 0
+    },
+    {
+        "pergunta": "Qual cidade brasileira sediou os Jogos Olímpicos de 2016?",
+        "opcoes": ["São Paulo", "Brasília", "Rio de Janeiro", "Salvador"],
+        "correta": 2
+    },
+    {
+        "pergunta": "Qual atleta é o maior medalhista da história olímpica?",
+        "opcoes": ["Usain Bolt", "Carl Lewis", "Larisa Latynina", "Michael Phelps"],
+        "correta": 3
+    },
+    {
+        "pergunta": "Com que frequência acontecem os Jogos Olímpicos de Verão?",
+        "opcoes": ["A cada 2 anos", "A cada 3 anos", "A cada 4 anos", "A cada 5 anos"],
+        "correta": 2
+    },
+    {
+        "pergunta": "Em que país foram realizados os Jogos Olímpicos de Tóquio, adiados de 2020 para 2021?",
+        "opcoes": ["China", "Coreia do Sul", "Japão", "Tailândia"],
+        "correta": 2
+    },
+    {
+        "pergunta": "Qual ginasta brasileira conquistou o ouro no solo nos Jogos de Paris 2024?",
+        "opcoes": ["Daiane dos Santos", "Rebeca Andrade", "Flávia Saraiva", "Jade Barbosa"],
+        "correta": 1
+    },
+    {
+        "pergunta": "Qual esporte estreou no programa olímpico nos Jogos de Paris 2024?",
+        "opcoes": ["Skate", "Surfe", "Breaking", "Escalada"],
+        "correta": 2
+    },
+    {
+        "pergunta": "Qual cidade vai sediar os Jogos Olímpicos de Verão de 2028?",
+        "opcoes": ["Brisbane", "Los Angeles", "Madri", "Berlim"],
+        "correta": 1
+    }
+]
