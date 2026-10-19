@@ -65,6 +65,6 @@ Para visualizar localmente: `npx http-server .` e abra `http://localhost:8080`.
 
 A pasta `quiz-olimpiadas/` tem um quiz em PHP: `perguntas.json` traz 10 perguntas
 com 4 opções cada, `index.php` lê o JSON, gera o formulário e corrige as respostas
-via POST, e `style.css` cuida do visual. Para rodar, copie a pasta para o `htdocs`
+via POST (com um CSS simples dentro dele). Para rodar, copie a pasta para o `htdocs`
 do XAMPP (ou `www` do Laragon) e abra `http://localhost/quiz-olimpiadas/`, ou use
 `php -S localhost:8000` dentro da pasta.
