@@ -216,19 +216,23 @@ body {
 }
 
 /* Resultado de cada opção */
-.opcao.correta {
+.opcao.correta,
+.opcao.correta:has(input:checked) {
     border-color: var(--verde);
     background: #f0fdf4;
 }
 
-.opcao.correta .letra { background: var(--verde); color: #fff; }
+.opcao.correta .letra,
+.opcao.correta:has(input:checked) .letra { background: var(--verde); color: #fff; }
 
-.opcao.incorreta {
+.opcao.incorreta,
+.opcao.incorreta:has(input:checked) {
     border-color: var(--vermelho);
     background: #fef2f2;
 }
 
-.opcao.incorreta .letra { background: var(--vermelho); color: #fff; }
+.opcao.incorreta .letra,
+.opcao.incorreta:has(input:checked) .letra { background: var(--vermelho); color: #fff; }
 
 input:disabled + .letra { cursor: default; }
 .card .opcao:has(input:disabled) { cursor: default; }
