@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Academia Base II — Musculação, Jiu-jitsu, Muay Thai, Judô e Piscina</title>
-  <meta name="description" content="Academia Base II: musculação, jiu-jitsu com a Equipe Renan Rocha, Muay Thai, Judô e atividades aquáticas. Fale conosco pelo WhatsApp.">
+  <title>Academia Base II — Francisco Morato | Mensalidades e Modalidades</title>
+  <meta name="description" content="Academia Base II em Francisco Morato (SP), de Renan Rocha e Francinésio Carlos. Mensalidades de musculação, jiu-jitsu com a Equipe Renan Rocha, Muay Thai, Judô e piscina. Matricule-se pelo WhatsApp.">
   <meta name="theme-color" content="#0d0d0d">
   <link rel="stylesheet" href="css/styles.css">
 
@@ -21,15 +21,20 @@
   <header class="topo">
     <div class="container topo__linha">
       <a class="marca" href="#inicio" aria-label="Academia Base II — início">
-        ACADEMIA <span>BASE II</span>
+        <!-- Logo oficial: salve em assets/img/logo.png -->
+        <img class="marca__logo" src="assets/img/logo.png"
+             data-referencia="assets/img/referencia/logo.svg"
+             alt="" width="44" height="44" decoding="async">
+        <span class="marca__nome">ACADEMIA <span>BASE II</span></span>
       </a>
       <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu">
         <span class="sr-only">Abrir menu</span>
         <span class="menu-botao__barras" aria-hidden="true"></span>
       </button>
       <nav id="menu" class="menu" aria-label="Navegação principal">
+        <a href="#mensalidades">Mensalidades</a>
         <a href="#modalidades">Modalidades</a>
-        <a href="#jiu-jitsu">Equipe Renan Rocha</a>
+        <a href="#donos">Os donos</a>
         <a href="#contato">Contato</a>
       </nav>
     </div>
@@ -38,11 +43,33 @@
   <main id="conteudo">
     <!-- ================= HERO ================= -->
     <section id="inicio" class="hero">
-      <div class="container hero__conteudo">
-        <p class="sobretitulo">Academia Base II</p>
-        <h1>Treine forte.<br><span>Encontre a sua modalidade.</span></h1>
-        <p class="hero__texto">Musculação, jiu-jitsu com a Equipe Renan Rocha, Muay Thai, Judô e atividades aquáticas em um só lugar.</p>
-        <a class="btn btn--laranja" href="#modalidades">Conheça as modalidades</a>
+      <div class="container hero__grade">
+        <div class="hero__conteudo">
+          <p class="sobretitulo">Academia Base II · Francisco Morato – SP</p>
+          <h1>Treine forte.<br><span>Encontre a sua modalidade.</span></h1>
+          <p class="hero__texto">Musculação, jiu-jitsu com a Equipe Renan Rocha, Muay Thai, Judô e atividades aquáticas em um só lugar, em Francisco Morato.</p>
+          <div class="hero__acoes">
+            <a class="btn btn--laranja" href="#mensalidades">Ver mensalidades</a>
+            <a class="btn btn--contorno" href="#modalidades">Conheça as modalidades</a>
+          </div>
+        </div>
+        <img class="hero__logo" src="assets/img/logo.png"
+             data-referencia="assets/img/referencia/logo.svg"
+             alt="Logo da Academia Base II" width="360" height="360" decoding="async">
+      </div>
+    </section>
+
+    <!-- ================= MENSALIDADES ================= -->
+    <section id="mensalidades" class="secao mensalidades" aria-labelledby="mensalidades-titulo">
+      <div class="container">
+        <header class="secao__cabecalho">
+          <p class="sobretitulo">Planos e valores</p>
+          <h2 id="mensalidades-titulo">Mensalidades</h2>
+          <p class="secao__texto">Escolha a sua modalidade e fale direto com a academia para fazer a matrícula.</p>
+        </header>
+        <!-- Cards gerados a partir de "planos" em js/config.js (valores editáveis lá) -->
+        <div id="planos" class="planos"></div>
+        <p id="planos-observacao" class="planos__observacao" hidden></p>
       </div>
     </section>
 
@@ -153,6 +180,47 @@
       </div>
     </section>
 
+    <!-- ================= DONOS ================= -->
+    <section id="donos" class="secao donos" aria-labelledby="donos-titulo">
+      <div class="container">
+        <header class="secao__cabecalho">
+          <p class="sobretitulo">Quem está à frente da Base II</p>
+          <h2 id="donos-titulo">Os donos</h2>
+          <p class="secao__texto">A Academia Base II, de Francisco Morato, é comandada por Renan Rocha e Francinésio Carlos.</p>
+        </header>
+        <div class="donos__grade">
+          <article class="dono" aria-labelledby="dono-renan">
+            <figure class="midia dono__foto">
+              <!-- Foto oficial: salve em assets/img/donos/renan-rocha.jpg -->
+              <img src="assets/img/donos/renan-rocha.jpg"
+                   data-referencia="assets/img/referencia/renan-rocha.svg"
+                   alt="Renan Rocha, dono da Academia Base II"
+                   width="600" height="600" loading="lazy" decoding="async">
+            </figure>
+            <div class="dono__corpo">
+              <p class="dono__cargo">Sócio-proprietário</p>
+              <h3 id="dono-renan">Renan Rocha</h3>
+              <p>À frente da <strong>Equipe Renan Rocha</strong>, responsável pelo jiu-jitsu da academia.</p>
+            </div>
+          </article>
+          <article class="dono" aria-labelledby="dono-francinesio">
+            <figure class="midia dono__foto">
+              <!-- Foto oficial: salve em assets/img/donos/francinesio-carlos.jpg -->
+              <img src="assets/img/donos/francinesio-carlos.jpg"
+                   data-referencia="assets/img/referencia/francinesio-carlos.svg"
+                   alt="Francinésio Carlos, dono da Academia Base II"
+                   width="600" height="600" loading="lazy" decoding="async">
+            </figure>
+            <div class="dono__corpo">
+              <p class="dono__cargo">Sócio-proprietário</p>
+              <h3 id="dono-francinesio">Francinésio Carlos</h3>
+              <p>Sócio da Academia Base II ao lado de Renan Rocha.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= CHAMADA FINAL ================= -->
     <section id="contato" class="chamada" aria-labelledby="chamada-titulo">
       <figure class="chamada__foto midia">
@@ -177,6 +245,8 @@
 
   <footer class="rodape">
     <div class="container">
+      <p class="rodape__marca">Academia Base II · Francisco Morato – SP</p>
+      <p>Donos: Renan Rocha e Francinésio Carlos.</p>
       <p>© <span id="ano">2026</span> Academia Base II. Todos os direitos reservados.</p>
     </div>
   </footer>
@@ -192,6 +262,7 @@
 
   <script src="js/config.js"></script>
   <script src="js/whatsapp.js"></script>
+  <script src="js/planos.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -94,8 +94,9 @@ h1, h2, h3 { font-family: var(--fonte-titulo); line-height: 1.1; margin: 0 0 .5e
   border-bottom: 1px solid rgba(255, 255, 255, .06);
 }
 .topo__linha { display: flex; align-items: center; justify-content: space-between; min-height: 68px; }
-.marca { font-family: var(--fonte-titulo); text-decoration: none; font-size: 1.15rem; letter-spacing: .04em; }
-.marca span { color: var(--laranja); }
+.marca { display: inline-flex; align-items: center; gap: .65rem; font-family: var(--fonte-titulo); text-decoration: none; font-size: 1.15rem; letter-spacing: .04em; }
+.marca__logo { width: 44px; height: 44px; object-fit: contain; }
+.marca__nome span { color: var(--laranja); }
 .menu { display: flex; gap: 1.75rem; }
 .menu a { text-decoration: none; font-weight: 600; font-size: .95rem; color: var(--texto-suave); }
 .menu a:hover { color: var(--laranja); }
@@ -134,11 +135,86 @@ h1, h2, h3 { font-family: var(--fonte-titulo); line-height: 1.1; margin: 0 0 .5e
 .hero h1 { font-size: clamp(2.2rem, 6.5vw, 4.4rem); text-transform: uppercase; }
 .hero h1 span { color: var(--laranja); }
 .hero__texto { max-width: 560px; color: var(--texto-suave); font-size: 1.1rem; margin: 0 0 2rem; }
+.hero__grade { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2.5rem; }
+.hero__acoes { display: flex; flex-wrap: wrap; gap: .85rem; }
+.hero__logo { width: clamp(220px, 28vw, 360px); height: auto; filter: drop-shadow(0 18px 40px rgba(255, 106, 0, .25)); }
+@media (max-width: 860px) {
+  .hero__grade { grid-template-columns: 1fr; gap: 2rem; }
+  .hero__logo { order: -1; width: 150px; }
+}
+@media (max-width: 560px) {
+  .hero__acoes .btn { width: 100%; }
+}
 
 /* ---------- Seções ---------- */
 .secao { padding: clamp(4rem, 9vw, 6.5rem) 0; }
 .secao__cabecalho { margin-bottom: 2.5rem; }
 .secao__cabecalho h2 { font-size: clamp(2rem, 5vw, 3rem); text-transform: uppercase; }
+
+.secao__texto { margin: 0; max-width: 620px; color: var(--texto-suave); font-size: 1.05rem; }
+
+/* ---------- Mensalidades ---------- */
+.mensalidades {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255, 106, 0, .12), transparent 40%),
+    var(--grafite);
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+.planos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; align-items: stretch; }
+.plano {
+  position: relative; display: flex; flex-direction: column;
+  padding: 1.75rem 1.4rem 1.5rem;
+  background: var(--preto);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: var(--raio);
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.plano:hover { transform: translateY(-4px); border-color: rgba(255, 106, 0, .45); box-shadow: var(--sombra); }
+.plano--destaque {
+  border: 2px solid var(--laranja);
+  background: linear-gradient(160deg, #1f1209 0%, var(--preto) 55%);
+}
+.plano__selo {
+  position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%);
+  margin: 0; padding: .3rem .8rem; border-radius: 999px; white-space: nowrap;
+  background: var(--laranja); color: #000;
+  font-weight: 800; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+}
+.plano__nome { font-size: 1.2rem; text-transform: uppercase; margin-bottom: .75rem; }
+.plano__preco { display: flex; align-items: baseline; flex-wrap: nowrap; white-space: nowrap; margin: 0 0 .9rem; font-family: var(--fonte-titulo); color: var(--texto); line-height: 1; }
+.plano__moeda { font-size: 1rem; margin-right: .3rem; color: var(--laranja); }
+.plano__reais { font-size: clamp(2.2rem, 4vw, 2.6rem); letter-spacing: -.02em; }
+.plano__centavos { font-size: 1.1rem; }
+.plano__periodo { font-family: var(--fonte); font-size: .95rem; font-weight: 600; color: var(--texto-suave); margin-left: .25rem; }
+.plano__preco--consulte { font-size: 1.3rem; color: var(--laranja); min-height: 2.6rem; align-items: center; white-space: normal; flex-wrap: wrap; }
+.plano__descricao { color: var(--texto-suave); margin: 0 0 1.5rem; font-size: .95rem; }
+.plano .btn { margin-top: auto; width: 100%; padding-inline: .75rem; font-size: .8rem; letter-spacing: .04em; gap: .45rem; text-align: center; }
+.planos__observacao { margin: 1.5rem 0 0; color: var(--texto-suave); font-size: .85rem; }
+
+/* ---------- Donos ---------- */
+.donos { background: var(--grafite); border-top: 1px solid rgba(255, 255, 255, .06); }
+.donos__grade { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+.dono {
+  display: grid; grid-template-columns: 200px 1fr; align-items: center;
+  background: var(--preto);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-left: 6px solid var(--laranja);
+  border-radius: var(--raio);
+  overflow: hidden;
+}
+.dono .dono__foto { aspect-ratio: 1 / 1; width: 100%; min-width: 0; }
+.dono__corpo { padding: 1.5rem; }
+.dono__cargo { margin: 0 0 .35rem; color: var(--laranja); font-weight: 800; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; }
+.dono h3 { font-size: clamp(1.4rem, 3vw, 1.8rem); text-transform: uppercase; }
+.dono p:last-child { margin: 0; color: var(--texto-suave); }
+.dono strong { color: var(--texto); }
+@media (max-width: 900px) {
+  .donos__grade { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .dono { grid-template-columns: 1fr; }
+  .dono .dono__foto { aspect-ratio: 4 / 3; }
+}
 
 /* ---------- Modalidades ---------- */
 .modalidades { background: var(--preto); }
@@ -243,7 +319,8 @@ h1, h2, h3 { font-family: var(--fonte-titulo); line-height: 1.1; margin: 0 0 .5e
   /* Espaço extra para o botão flutuante não cobrir o rodapé */
   padding: 1.75rem 0 calc(var(--espaco-flutuante) + env(safe-area-inset-bottom, 0px));
 }
-.rodape p { margin: 0; }
+.rodape p { margin: 0 0 .25rem; }
+.rodape__marca { font-family: var(--fonte-titulo); color: var(--texto); letter-spacing: .04em; }
 
 /* ---------- Botão flutuante do WhatsApp ---------- */
 .whatsapp-flutuante {

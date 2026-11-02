@@ -24,12 +24,23 @@ mudar o número do WhatsApp, as mensagens ou as fotos.
    (veja `assets/img/modalidades/LEIA-ME.md`) e a foto da academia/equipe em
    `assets/img/equipe.jpg`. As imagens atuais são **referências provisórias**
    (marcadas com o selo "Imagem de referência") e devem ser substituídas.
-3. **Atividades aquáticas** — em `js/config.js`, liste em `atividadesAquaticas`
+3. **Logo oficial** — salve a logo da academia em `assets/img/logo.png`
+   (PNG com fundo transparente, quadrada, ex.: 512×512 px). Ela aparece no topo
+   e no início da página. Enquanto o arquivo não existir, aparece um escudo
+   provisório "BASE II".
+4. **Mensalidades** — em `js/config.js`, preencha `valor` de cada item de
+   `planos` (ex.: `valor: 120` ou `valor: 89.90`). Com `valor: null` o card mostra
+   "Consulte o valor" e o botão pergunta o preço pelo WhatsApp. Também dá para
+   mudar o nome, a descrição, a etiqueta (`selo`), remover ou adicionar planos.
+5. **Fotos dos donos** — Renan Rocha e Francinésio Carlos: veja
+   `assets/img/donos/LEIA-ME.md`.
+6. **Atividades aquáticas** — em `js/config.js`, liste em `atividadesAquaticas`
    somente as atividades que a academia oferece de fato. Vazio = nada é exibido.
-4. Rode os testes (abaixo) com o número já preenchido.
+7. Rode os testes (abaixo) com o número já preenchido.
 
-O site não exibe horários, preços, faixas etárias nem turmas: essas informações
-são tratadas pelo WhatsApp.
+Seções da página: início (logo, Francisco Morato), **mensalidades**,
+modalidades, **os donos** (Renan Rocha e Francinésio Carlos) e chamada final.
+Horários, faixas etárias e turmas não aparecem no site: são tratados pelo WhatsApp.
 
 ## Links de WhatsApp
 
@@ -47,11 +58,12 @@ Todos os botões usam o formato `https://wa.me/55DDDNUMERO?text=MENSAGEM_CODIFIC
 | Judô                          | `judo`          |
 | Piscina                       | `piscina`       |
 | Chamada final                 | `chamada-final` |
+| Cards de mensalidade          | `plano-<id>` (mensagem montada em `js/planos.js`, cita o valor quando existe) |
 
 ## Testes
 
 ```bash
-# Unitários: validação do número e codificação das mensagens
+# Unitários: número do WhatsApp, mensagens e formatação das mensalidades
 node --test tests/whatsapp.test.js
 
 # Navegador (Chromium via Playwright), desktop e celular,

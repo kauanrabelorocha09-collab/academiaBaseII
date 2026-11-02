@@ -25,7 +25,19 @@ const servidor = http.createServer((req, res) => {
 
 const CHAVES = ["geral", "musculacao", "jiu-jitsu", "muay-thai", "judo", "piscina", "chamada-final"];
 const configTexto = fs.readFileSync(path.join(RAIZ, "js/config.js"), "utf8");
-const mensagens = (() => { const w = {}; new Function("window", configTexto)(w); return w.ACADEMIA_CONFIG.mensagens; })();
+const Planos = require("../js/planos.js");
+const CONFIG = (() => { const w = {}; new Function("window", configTexto)(w); return w.ACADEMIA_CONFIG; })();
+const mensagens = { ...CONFIG.mensagens };
+for (const p of CONFIG.planos) { mensagens["plano-" + p.id] = Planos.mensagemPlano(p); CHAVES.push("plano-" + p.id); }
+// Planos com valor fictício injetado só no teste (para conferir a exibição do preço).
+const VALORES_TESTE = { musculacao: 99.9, "jiu-jitsu": 150 };
+const configComValores = configTexto
+  .replace(/(id: "musculacao",[\s\S]*?valor: )null/, (_, a) => a + "99.9")
+  .replace(/(id: "jiu-jitsu",[\s\S]*?valor: )null/, (_, a) => a + "150");
+const mensagensComValores = { ...mensagens };
+for (const p of CONFIG.planos) {
+  mensagensComValores["plano-" + p.id] = Planos.mensagemPlano({ ...p, valor: VALORES_TESTE[p.id] ?? p.valor });
+}
 
 let falhas = 0;
 async function caso(nome, fn) {
@@ -40,8 +52,9 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
   await contexto.route("https://wa.me/**", (r) => r.fulfill({ status: 200, contentType: "text/html", body: "wa.me ok" }));
   if (configurado) {
     await contexto.route("**/js/config.js", (r) =>
-      r.fulfill({ contentType: "text/javascript", body: configTexto.replace('whatsappNumero: ""', `whatsappNumero: "${NUMERO_TESTE}"`) }));
+      r.fulfill({ contentType: "text/javascript", body: configComValores.replace('whatsappNumero: ""', `whatsappNumero: "${NUMERO_TESTE}"`) }));
   }
+  const esperadas = configurado ? mensagensComValores : mensagens;
   const page = await contexto.newPage();
   const erros = [];
   page.on("pageerror", (e) => erros.push(e.message));
@@ -72,7 +85,7 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
   await caso("no fim da página o botão flutuante não cobre o rodapé nem o botão da chamada final", async () => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     const f = await page.locator(".whatsapp-flutuante").boundingBox();
-    for (const sel of [".rodape p", ".chamada .btn"]) {
+    for (const sel of [".rodape p:last-child", ".chamada .btn"]) {
       await page.locator(sel).scrollIntoViewIfNeeded();
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       const b = await page.locator(sel).boundingBox();
@@ -104,6 +117,44 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
     assert.ok(await page.locator("#jiu-jitsu").evaluate((el) => el.classList.contains("modalidade--destaque")));
   });
 
+  await caso("mensalidades: um card por plano, logo após o topo", async () => {
+    const cards = page.locator("#planos .plano");
+    assert.equal(await cards.count(), CONFIG.planos.length);
+    const ordem = await page.evaluate(() => [...document.querySelectorAll("main > section")].map((s) => s.id));
+    assert.deepEqual(ordem.slice(0, 2), ["inicio", "mensalidades"]);
+    for (const p of CONFIG.planos) {
+      const card = page.locator(`#plano-${p.id}`);
+      assert.equal((await card.locator("h3").innerText()).toUpperCase(), p.nome.toUpperCase());
+      const valor = configurado ? (VALORES_TESTE[p.id] ?? p.valor) : p.valor;
+      const preco = (await card.locator(".plano__preco").innerText()).replace(/\s+/g, "");
+      const botao = (await card.locator("a[data-whatsapp]").innerText()).trim();
+      if (valor) {
+        assert.equal(preco, Planos.formatarValor(valor).texto.replace(/\s+/g, "") + "/" + (p.periodo || "mês"));
+        assert.equal(botao, "QUERO ESTE PLANO");
+      } else {
+        assert.match(preco, /Consulteovalor/i);
+        assert.equal(botao, "CONSULTAR VALOR");
+      }
+    }
+    assert.match(await page.locator("#plano-jiu-jitsu .plano__selo").innerText(), /Equipe Renan Rocha/i);
+  });
+
+  await caso("seção dos donos com Renan Rocha e Francinésio Carlos", async () => {
+    const nomes = await page.locator("#donos .dono h3").allInnerTexts();
+    assert.deepEqual(nomes.map((n) => n.toUpperCase()), ["RENAN ROCHA", "FRANCINÉSIO CARLOS"]);
+    for (const img of await page.locator("#donos img").all()) {
+      await img.scrollIntoViewIfNeeded();
+      await assert.doesNotReject(img.evaluate((i) => i.complete && i.naturalWidth > 0 ? 1 : new Promise((ok) => i.addEventListener("load", ok))));
+    }
+  });
+
+  await caso("logo e Francisco Morato visíveis no topo", async () => {
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForFunction(() => [...document.querySelectorAll(".marca__logo, .hero__logo")].every((i) => i.complete && i.naturalWidth > 0));
+    assert.match(await page.locator(".hero .sobretitulo").innerText(), /Francisco Morato/i);
+    assert.match(await page.title(), /Francisco Morato/);
+  });
+
   await caso("chamada final com título, texto e botão", async () => {
     assert.match(await page.locator("#chamada-titulo").innerText(), /SEU PRÓXIMO PASSO\s+COMEÇA AQUI\./);
     assert.match(await page.locator(".chamada p").innerText(), /^Escolha sua modalidade, conheça nossa estrutura e venha descobrir o seu espaço na Academia Base II\.$/);
@@ -128,12 +179,12 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
       } else {
         const url = new URL(href);
         assert.equal(url.origin + url.pathname, `https://wa.me/${NUMERO_TESTE}`);
-        assert.equal(url.searchParams.get("text"), mensagens[chave]);
+        assert.equal(url.searchParams.get("text"), esperadas[chave]);
         assert.equal(await botao.getAttribute("target"), "_blank");
         assert.equal(await botao.getAttribute("aria-disabled"), null);
         const [aba] = await Promise.all([contexto.waitForEvent("page"), botao.click()]);
         await aba.waitForLoadState();
-        assert.equal(decodeURIComponent(new URL(aba.url()).searchParams.get("text")), mensagens[chave]);
+        assert.equal(new URL(aba.url()).searchParams.get("text"), esperadas[chave]);
         assert.ok(aba.url().startsWith(`https://wa.me/${NUMERO_TESTE}?text=`));
         await aba.close();
       }

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="Academia Base II — Francisco Morato">
+  <defs>
+    <linearGradient id="l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1e1e"/><stop offset="1" stop-color="#0b0b0b"/></linearGradient>
+  </defs>
+  <path d="M120 8 L222 44 V120 C222 176 178 214 120 232 C62 214 18 176 18 120 V44 Z" fill="#ff6a00"/>
+  <path d="M120 22 L208 53 V120 C208 168 170 201 120 217 C70 201 32 168 32 120 V53 Z" fill="url(#l)"/>
+  <text x="120" y="72" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="17" letter-spacing="3" fill="#f2f2f2">ACADEMIA</text>
+  <text x="120" y="128" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="54" letter-spacing="1" fill="#f2f2f2">BASE</text>
+  <rect x="62" y="140" width="116" height="40" rx="6" fill="#ff6a00"/>
+  <text x="120" y="172" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="34" letter-spacing="6" fill="#0d0d0d">II</text>
+  <text x="120" y="193" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="8" letter-spacing="1.2" fill="#b8b8b8">FRANCISCO MORATO</text>
+</svg>

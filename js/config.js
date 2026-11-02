@@ -43,4 +43,59 @@ window.ACADEMIA_CONFIG = {
    * Deixe vazio ([]) enquanto não houver confirmação — nenhuma lista é exibida.
    */
   atividadesAquaticas: [],
+
+  /*
+   * ============================================================
+   *  MENSALIDADES  >>> PREENCHA OS VALORES REAIS <<<
+   * ============================================================
+   *  valor: número em reais, com ponto para centavos. Ex.: 120 ou 89.90
+   *         Deixe null enquanto o valor não estiver confirmado: o card
+   *         mostra "Consulte o valor" e o botão pergunta o preço no WhatsApp.
+   *  periodo: aparece depois do preço ("/mês").
+   *  selo: etiqueta opcional em destaque no topo do card.
+   *  destaque: true deixa o card com borda laranja.
+   *  Para remover um plano, apague o bloco { ... } dele.
+   */
+  planos: [
+    {
+      id: "musculacao",
+      nome: "Musculação",
+      descricao: "Treino com equipamentos para força, resistência e qualidade de vida.",
+      valor: null,
+      periodo: "mês",
+    },
+    {
+      id: "jiu-jitsu",
+      nome: "Jiu-jitsu",
+      descricao: "Aulas no tatame com a Equipe Renan Rocha.",
+      valor: null,
+      periodo: "mês",
+      selo: "Equipe Renan Rocha",
+      destaque: true,
+    },
+    {
+      id: "muay-thai",
+      nome: "Muay Thai",
+      descricao: "Técnica de luta e condicionamento físico.",
+      valor: null,
+      periodo: "mês",
+    },
+    {
+      id: "judo",
+      nome: "Judô",
+      descricao: "Projeções, imobilizações, equilíbrio e disciplina.",
+      valor: null,
+      periodo: "mês",
+    },
+    {
+      id: "piscina",
+      nome: "Piscina",
+      descricao: "Atividades aquáticas na piscina da academia.",
+      valor: null,
+      periodo: "mês",
+    },
+  ],
+
+  /* Texto pequeno abaixo dos planos. Deixe "" para não exibir. */
+  observacaoPlanos: "Valores e condições podem mudar. Confirme pelo WhatsApp antes de se matricular.",
 };

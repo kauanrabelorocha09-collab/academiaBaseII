@@ -39,6 +39,16 @@ html = html.replace(
   }
 );
 
+// Demais imagens (ex.: logo): arquivo oficial se existir; senão, a provisória.
+html = html.replace(
+  /<img((?:\s+class="[^"]*")?)\s+src="([^"]+)"\s+data-referencia="([^"]+)"/g,
+  (_, classe, oficial, referencia) => {
+    if (existe(oficial)) return `<img${classe} src="${dataUri(oficial)}"`;
+    faltando.push(oficial);
+    return `<img${classe} src="${dataUri(referencia)}"`;
+  }
+);
+
 if (/(?:src|href)="(?:css|js|assets)\//.test(html)) {
   throw new Error("Restou alguma referência a arquivo externo no HTML gerado.");
 }
@@ -48,10 +58,13 @@ fs.writeFileSync(SAIDA, html);
 
 console.log(`Gerado: ${path.relative(RAIZ, SAIDA)} (${(Buffer.byteLength(html) / 1024).toFixed(0)} KB)`);
 if (faltando.length) {
-  console.log("\nFotos oficiais ainda ausentes (usando imagem de referência):");
-  faltando.forEach((f) => console.log("  - " + f));
+  console.log("\nArquivos oficiais ainda ausentes (usando imagem provisória):");
+  [...new Set(faltando)].forEach((f) => console.log("  - " + f));
 }
 const config = ler("js/config.js");
+if (/valor:\s*null/.test(config)) {
+  console.log("\nATENÇÃO: há mensalidades sem valor em js/config.js — esses cards mostram \"Consulte o valor\".");
+}
 if (/whatsappNumero:\s*""/.test(config)) {
   console.log("\nATENÇÃO: whatsappNumero está vazio em js/config.js — os botões de WhatsApp mostram apenas um aviso.");
 }

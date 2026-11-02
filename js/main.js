@@ -12,6 +12,67 @@
     );
   }
 
+  /* ---------- Mensalidades (geradas a partir de config.planos) ---------- */
+  var gradePlanos = document.getElementById("planos");
+  var planos = config.planos || [];
+  if (gradePlanos) {
+    planos.forEach(function (plano) {
+      var chave = "plano-" + plano.id;
+      mensagens[chave] = window.Planos.mensagemPlano(plano);
+      gradePlanos.appendChild(criarCardPlano(plano, chave));
+    });
+  }
+  var observacao = document.getElementById("planos-observacao");
+  if (observacao && config.observacaoPlanos) {
+    observacao.textContent = config.observacaoPlanos;
+    observacao.hidden = false;
+  }
+
+  function el(tag, classe, texto) {
+    var e = document.createElement(tag);
+    if (classe) e.className = classe;
+    if (texto != null) e.textContent = texto;
+    return e;
+  }
+
+  function criarCardPlano(plano, chave) {
+    var valor = window.Planos.formatarValor(plano.valor);
+    var card = el("article", "plano" + (plano.destaque ? " plano--destaque" : ""));
+    card.id = "plano-" + plano.id;
+    var tituloId = "plano-titulo-" + plano.id;
+    card.setAttribute("aria-labelledby", tituloId);
+
+    if (plano.selo) card.appendChild(el("p", "plano__selo", plano.selo));
+    var titulo = el("h3", "plano__nome", plano.nome);
+    titulo.id = tituloId;
+    card.appendChild(titulo);
+
+    var preco = el("p", "plano__preco");
+    if (valor) {
+      preco.setAttribute("aria-label", valor.texto + " por " + (plano.periodo || "mês"));
+      preco.appendChild(el("span", "plano__moeda", "R$"));
+      preco.appendChild(el("span", "plano__reais", valor.reais));
+      preco.appendChild(el("span", "plano__centavos", "," + valor.centavos));
+      preco.appendChild(el("span", "plano__periodo", "/" + (plano.periodo || "mês")));
+    } else {
+      preco.classList.add("plano__preco--consulte");
+      preco.textContent = "Consulte o valor";
+    }
+    card.appendChild(preco);
+
+    if (plano.descricao) card.appendChild(el("p", "plano__descricao", plano.descricao));
+
+    var botao = el("a", "btn " + (plano.destaque ? "btn--laranja" : "btn--contorno"));
+    botao.href = "#";
+    botao.setAttribute("data-whatsapp", chave);
+    botao.setAttribute("aria-label",
+      (valor ? "Quero me matricular em " : "Consultar o valor de ") + plano.nome + " — conversar pelo WhatsApp");
+    botao.innerHTML = '<svg class="btn__icone" aria-hidden="true"><use href="#icone-whatsapp"/></svg>';
+    botao.appendChild(document.createTextNode(valor ? "QUERO ESTE PLANO" : "CONSULTAR VALOR"));
+    card.appendChild(botao);
+    return card;
+  }
+
   /* ---------- Links de WhatsApp ---------- */
   var botoes = document.querySelectorAll("[data-whatsapp]");
   Array.prototype.forEach.call(botoes, function (botao) {

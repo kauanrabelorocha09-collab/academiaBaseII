@@ -5,6 +5,7 @@ const vm = require("node:vm");
 const fs = require("node:fs");
 const path = require("node:path");
 const W = require("../js/whatsapp.js");
+const P = require("../js/planos.js");
 
 // Carrega js/config.js como no navegador.
 const sandbox = { window: {} };
@@ -51,4 +52,33 @@ test("mensagens exigidas pelo briefing", () => {
   assert.match(config.mensagens["muay-thai"], /Muay Thai/);
   assert.match(config.mensagens.judo, /Judô/);
   assert.match(config.mensagens.piscina, /atividades aquáticas/);
+});
+
+test("valores das mensalidades são formatados em reais", () => {
+  assert.equal(P.formatarValor(120).texto, "R$ 120,00");
+  assert.equal(P.formatarValor(89.9).texto, "R$ 89,90");
+  assert.equal(P.formatarValor(1250.5).texto, "R$ 1.250,50");
+  assert.deepEqual(P.formatarValor(99.99), { reais: "99", centavos: "99", texto: "R$ 99,99" });
+  for (const v of [null, undefined, 0, -10, "120", NaN, Infinity]) assert.equal(P.formatarValor(v), null);
+});
+
+test("mensagem do plano cita o valor quando ele existe", () => {
+  assert.equal(P.mensagemPlano({ nome: "Judô", valor: 100, periodo: "mês" }),
+    "Olá! Vi no site a mensalidade de Judô (R$ 100,00/mês) e quero me matricular na Academia Base II.");
+  assert.equal(P.mensagemPlano({ nome: "Judô", valor: null }),
+    "Olá! Vi no site da Academia Base II e gostaria de saber o valor da mensalidade de Judô.");
+});
+
+test("planos configurados são válidos", () => {
+  assert.ok(config.planos.length >= 1);
+  const ids = new Set();
+  for (const p of config.planos) {
+    assert.match(p.id, /^[a-z0-9-]+$/);
+    assert.ok(!ids.has(p.id), "id repetido: " + p.id);
+    ids.add(p.id);
+    assert.ok(p.nome);
+    assert.ok(p.valor === null || P.valorValido(p.valor), "valor inválido em " + p.id);
+    const url = new URL(W.montarLink(NUMERO_TESTE, P.mensagemPlano(p)));
+    assert.equal(url.searchParams.get("text"), P.mensagemPlano(p));
+  }
 });
