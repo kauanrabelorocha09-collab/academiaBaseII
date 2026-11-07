@@ -15,8 +15,8 @@ mudar o número do WhatsApp, as mensagens ou as fotos.
 
 ## ⚠️ Antes de publicar (obrigatório)
 
-1. **Número do WhatsApp** — abra `js/config.js` e preencha `whatsappNumero` com o
-   número oficial da academia: `55` + DDD + número, só dígitos
+1. **Número do WhatsApp** — já configurado: (11) 94488-7323. Para trocar, abra
+   `js/config.js` e altere `whatsappNumero`: `55` + DDD + número, só dígitos
    (sem espaços, parênteses, traços ou `+`). Ex. de formato: `55DD9XXXXXXXX`.
    Enquanto estiver vazio, **nenhum botão abre o WhatsApp**: o visitante vê o aviso
    "O contato pelo WhatsApp estará disponível em breve" e o console mostra um alerta.

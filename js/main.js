@@ -218,6 +218,17 @@
     });
   }
 
+  /* ---------- Número visível no rodapé: (11) 94488-7323 ---------- */
+  var rodapeLink = document.getElementById("rodape-whatsapp");
+  if (rodapeLink && configurado) {
+    var d = window.WhatsApp.normalizarNumero(config.whatsappNumero).slice(2);
+    rodapeLink.textContent = "(" + d.slice(0, 2) + ") " + d.slice(2, -4) + "-" + d.slice(-4);
+    rodapeLink.href = window.WhatsApp.montarLink(config.whatsappNumero);
+    rodapeLink.target = "_blank";
+    rodapeLink.rel = "noopener noreferrer";
+    document.getElementById("rodape-contato").hidden = false;
+  }
+
   var ano = document.getElementById("ano");
   if (ano) ano.textContent = new Date().getFullYear();
 })();

@@ -14,7 +14,7 @@
  *  disponível, e um alerta aparece no console do navegador.
  */
 window.ACADEMIA_CONFIG = {
-  whatsappNumero: "",
+  whatsappNumero: "5511944887323", // (11) 94488-7323
 
   /*
    * Mensagens pré-preenchidas. A chave corresponde ao atributo

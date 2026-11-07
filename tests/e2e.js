@@ -11,7 +11,6 @@ const assert = require("node:assert/strict");
 const { chromium, devices } = require("playwright");
 
 const RAIZ = path.join(__dirname, "..");
-const NUMERO_TESTE = "5511900000000"; // fictício
 const TIPOS = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".svg": "image/svg+xml", ".jpg": "image/jpeg" };
 
 const servidor = http.createServer((req, res) => {
@@ -27,6 +26,7 @@ const CHAVES = ["geral", "musculacao", "jiu-jitsu", "muay-thai", "judo", "piscin
 const configTexto = fs.readFileSync(path.join(RAIZ, "js/config.js"), "utf8");
 const Planos = require("../js/planos.js");
 const CONFIG = (() => { const w = {}; new Function("window", configTexto)(w); return w.ACADEMIA_CONFIG; })();
+const NUMERO_TESTE = CONFIG.whatsappNumero; // número real da academia (wa.me é interceptado, nada é enviado)
 const mensagens = { ...CONFIG.mensagens };
 for (const p of CONFIG.planos) { mensagens["plano-" + p.id] = Planos.mensagemPlano(p); CHAVES.push("plano-" + p.id); }
 for (const a of CONFIG.avulsos) { mensagens["avulso-" + a.id] = Planos.mensagemAvulso(a); CHAVES.push("avulso-" + a.id); }
@@ -38,13 +38,14 @@ async function caso(nome, fn) {
 }
 
 async function rodar(browser, base, perfil, opcoesContexto, configurado) {
-  console.log(`\n[${perfil}] número ${configurado ? "configurado (fictício)" : "NÃO configurado"}`);
+  console.log(`\n[${perfil}] número ${configurado ? "real (" + NUMERO_TESTE + ")" : "NÃO configurado (simulado)"}`);
   const contexto = await browser.newContext(opcoesContexto);
   // Nunca acessar o WhatsApp real durante os testes.
   await contexto.route("https://wa.me/**", (r) => r.fulfill({ status: 200, contentType: "text/html", body: "wa.me ok" }));
-  if (configurado) {
+  if (!configurado) {
+    // Simula o site sem número para conferir o aviso "em breve".
     await contexto.route("**/js/config.js", (r) =>
-      r.fulfill({ contentType: "text/javascript", body: configTexto.replace('whatsappNumero: ""', `whatsappNumero: "${NUMERO_TESTE}"`) }));
+      r.fulfill({ contentType: "text/javascript", body: configTexto.replace(/whatsappNumero: "[^"]*"/, 'whatsappNumero: ""') }));
   }
   const esperadas = mensagens;
   const page = await contexto.newPage();
@@ -141,6 +142,15 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
     for (const img of await page.locator("#donos img").all()) {
       await img.scrollIntoViewIfNeeded();
       await assert.doesNotReject(img.evaluate((i) => i.complete && i.naturalWidth > 0 ? 1 : new Promise((ok) => i.addEventListener("load", ok))));
+    }
+  });
+
+  await caso("número no rodapé só quando configurado", async () => {
+    const p = page.locator("#rodape-contato");
+    assert.equal(await p.isVisible(), configurado);
+    if (configurado) {
+      assert.equal(await page.locator("#rodape-whatsapp").innerText(), "(11) 94488-7323");
+      assert.equal(await page.locator("#rodape-whatsapp").getAttribute("href"), `https://wa.me/${NUMERO_TESTE}`);
     }
   });
 
