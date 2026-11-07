@@ -29,15 +29,7 @@ const Planos = require("../js/planos.js");
 const CONFIG = (() => { const w = {}; new Function("window", configTexto)(w); return w.ACADEMIA_CONFIG; })();
 const mensagens = { ...CONFIG.mensagens };
 for (const p of CONFIG.planos) { mensagens["plano-" + p.id] = Planos.mensagemPlano(p); CHAVES.push("plano-" + p.id); }
-// Planos com valor fictício injetado só no teste (para conferir a exibição do preço).
-const VALORES_TESTE = { musculacao: 99.9, "jiu-jitsu": 150 };
-const configComValores = configTexto
-  .replace(/(id: "musculacao",[\s\S]*?valor: )null/, (_, a) => a + "99.9")
-  .replace(/(id: "jiu-jitsu",[\s\S]*?valor: )null/, (_, a) => a + "150");
-const mensagensComValores = { ...mensagens };
-for (const p of CONFIG.planos) {
-  mensagensComValores["plano-" + p.id] = Planos.mensagemPlano({ ...p, valor: VALORES_TESTE[p.id] ?? p.valor });
-}
+for (const a of CONFIG.avulsos) { mensagens["avulso-" + a.id] = Planos.mensagemAvulso(a); CHAVES.push("avulso-" + a.id); }
 
 let falhas = 0;
 async function caso(nome, fn) {
@@ -52,9 +44,9 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
   await contexto.route("https://wa.me/**", (r) => r.fulfill({ status: 200, contentType: "text/html", body: "wa.me ok" }));
   if (configurado) {
     await contexto.route("**/js/config.js", (r) =>
-      r.fulfill({ contentType: "text/javascript", body: configComValores.replace('whatsappNumero: ""', `whatsappNumero: "${NUMERO_TESTE}"`) }));
+      r.fulfill({ contentType: "text/javascript", body: configTexto.replace('whatsappNumero: ""', `whatsappNumero: "${NUMERO_TESTE}"`) }));
   }
-  const esperadas = configurado ? mensagensComValores : mensagens;
+  const esperadas = mensagens;
   const page = await contexto.newPage();
   const erros = [];
   page.on("pageerror", (e) => erros.push(e.message));
@@ -117,26 +109,30 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
     assert.ok(await page.locator("#jiu-jitsu").evaluate((el) => el.classList.contains("modalidade--destaque")));
   });
 
-  await caso("mensalidades: um card por plano, logo após o topo", async () => {
-    const cards = page.locator("#planos .plano");
-    assert.equal(await cards.count(), CONFIG.planos.length);
+  await caso("mensalidades: cards com todos os valores, logo após o topo", async () => {
     const ordem = await page.evaluate(() => [...document.querySelectorAll("main > section")].map((s) => s.id));
     assert.deepEqual(ordem.slice(0, 2), ["inicio", "mensalidades"]);
+    assert.equal(await page.locator("#mensalidades .plano").count(), CONFIG.planos.length);
     for (const p of CONFIG.planos) {
       const card = page.locator(`#plano-${p.id}`);
-      assert.equal((await card.locator("h3").innerText()).toUpperCase(), p.nome.toUpperCase());
-      const valor = configurado ? (VALORES_TESTE[p.id] ?? p.valor) : p.valor;
-      const preco = (await card.locator(".plano__preco").innerText()).replace(/\s+/g, "");
-      const botao = (await card.locator("a[data-whatsapp]").innerText()).trim();
-      if (valor) {
-        assert.equal(preco, Planos.formatarValor(valor).texto.replace(/\s+/g, "") + "/" + (p.periodo || "mês"));
-        assert.equal(botao, "QUERO ESTE PLANO");
+      const multiplos = Planos.precosValidos(p).length > 1;
+      assert.equal(await card.evaluate((el) => el.parentElement.id), multiplos ? "planos" : "planos-outros");
+      assert.equal((await card.locator(".plano__nome").innerText()).toUpperCase(), p.nome.toUpperCase());
+      const texto = (await card.innerText()).replace(/\s+/g, "");
+      const principal = Planos.precoPrincipal(p);
+      if (principal) {
+        for (const x of p.precos) assert.ok(texto.includes(Planos.formatarValor(x.valor).texto.replace(/\s+/g, "")), `${p.id}: falta ${x.valor}`);
+        assert.equal((await card.locator("a[data-whatsapp]").innerText()).trim(), "QUERO ESTE PLANO");
       } else {
-        assert.match(preco, /Consulteovalor/i);
-        assert.equal(botao, "CONSULTAR VALOR");
+        assert.match(texto, /Consulteovalor/i);
+        assert.equal((await card.locator("a[data-whatsapp]").innerText()).trim(), "CONSULTAR VALOR");
       }
     }
+    assert.match(await page.locator("#plano-musculacao").innerText(), /Semestral\s+R\$ 630,00[\s\S]*sai R\$ 105,00\/mês · economize R\$ 90,00/);
     assert.match(await page.locator("#plano-jiu-jitsu .plano__selo").innerText(), /Equipe Renan Rocha/i);
+    for (const a of CONFIG.avulsos) {
+      assert.match(await page.locator(`#avulso-${a.id}`).innerText(), new RegExp(Planos.formatarValor(a.valor).texto.replace("$", "\\$")));
+    }
   });
 
   await caso("seção dos donos com Renan Rocha e Francinésio Carlos", async () => {

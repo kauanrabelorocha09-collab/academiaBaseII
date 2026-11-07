@@ -12,16 +12,29 @@
     );
   }
 
-  /* ---------- Mensalidades (geradas a partir de config.planos) ---------- */
+  /* ---------- Mensalidades (geradas a partir de config.planos / config.avulsos) ---------- */
+  var P = window.Planos;
   var gradePlanos = document.getElementById("planos");
-  var planos = config.planos || [];
-  if (gradePlanos) {
-    planos.forEach(function (plano) {
-      var chave = "plano-" + plano.id;
-      mensagens[chave] = window.Planos.mensagemPlano(plano);
-      gradePlanos.appendChild(criarCardPlano(plano, chave));
-    });
-  }
+  var gradeOutros = document.getElementById("planos-outros");
+  (config.planos || []).forEach(function (plano) {
+    var chave = "plano-" + plano.id;
+    mensagens[chave] = P.mensagemPlano(plano);
+    var completo = P.precosValidos(plano).length > 1;
+    var destino = completo ? gradePlanos : gradeOutros;
+    if (!destino) return;
+    destino.appendChild(criarCardPlano(plano, chave, completo));
+    if (!completo) document.getElementById("bloco-outros").hidden = false;
+  });
+
+  var listaAvulsos = document.getElementById("avulsos");
+  (config.avulsos || []).forEach(function (item) {
+    if (!listaAvulsos) return;
+    var chave = "avulso-" + item.id;
+    mensagens[chave] = P.mensagemAvulso(item);
+    listaAvulsos.appendChild(criarAvulso(item, chave));
+    document.getElementById("bloco-avulsos").hidden = false;
+  });
+
   var observacao = document.getElementById("planos-observacao");
   if (observacao && config.observacaoPlanos) {
     observacao.textContent = config.observacaoPlanos;
@@ -35,42 +48,90 @@
     return e;
   }
 
-  function criarCardPlano(plano, chave) {
-    var valor = window.Planos.formatarValor(plano.valor);
-    var card = el("article", "plano" + (plano.destaque ? " plano--destaque" : ""));
+  function botaoWhatsApp(chave, texto, rotulo, classe) {
+    var botao = el("a", "btn " + classe);
+    botao.href = "#";
+    botao.setAttribute("data-whatsapp", chave);
+    botao.setAttribute("aria-label", rotulo + " — conversar pelo WhatsApp");
+    botao.innerHTML = '<svg class="btn__icone" aria-hidden="true"><use href="#icone-whatsapp"/></svg>';
+    botao.appendChild(document.createTextNode(texto));
+    return botao;
+  }
+
+  function precoGrande(preco) {
+    var valor = P.formatarValor(preco.valor);
+    var sufixo = (preco.meses || 1) === 1 ? "/mês" : "/" + (preco.tipo || "").toLowerCase();
+    var bloco = el("p", "plano__preco");
+    bloco.setAttribute("aria-label", valor.texto + " " + (preco.tipo || "").toLowerCase());
+    bloco.appendChild(el("span", "plano__moeda", "R$"));
+    bloco.appendChild(el("span", "plano__reais", valor.reais));
+    bloco.appendChild(el("span", "plano__centavos", "," + valor.centavos));
+    bloco.appendChild(el("span", "plano__periodo", sufixo));
+    return bloco;
+  }
+
+  function criarCardPlano(plano, chave, completo) {
+    var principal = P.precoPrincipal(plano);
+    var card = el("article", "plano" + (plano.destaque ? " plano--destaque" : "") + (completo ? "" : " plano--compacto"));
     card.id = "plano-" + plano.id;
-    var tituloId = "plano-titulo-" + plano.id;
-    card.setAttribute("aria-labelledby", tituloId);
+    card.setAttribute("aria-labelledby", "plano-titulo-" + plano.id);
 
     if (plano.selo) card.appendChild(el("p", "plano__selo", plano.selo));
-    var titulo = el("h3", "plano__nome", plano.nome);
-    titulo.id = tituloId;
+    var titulo = el(completo ? "h3" : "h4", "plano__nome", plano.nome);
+    titulo.id = "plano-titulo-" + plano.id;
     card.appendChild(titulo);
 
-    var preco = el("p", "plano__preco");
-    if (valor) {
-      preco.setAttribute("aria-label", valor.texto + " por " + (plano.periodo || "mês"));
-      preco.appendChild(el("span", "plano__moeda", "R$"));
-      preco.appendChild(el("span", "plano__reais", valor.reais));
-      preco.appendChild(el("span", "plano__centavos", "," + valor.centavos));
-      preco.appendChild(el("span", "plano__periodo", "/" + (plano.periodo || "mês")));
+    if (principal) {
+      card.appendChild(precoGrande(principal));
     } else {
-      preco.classList.add("plano__preco--consulte");
-      preco.textContent = "Consulte o valor";
+      card.appendChild(el("p", "plano__preco plano__preco--consulte", "Consulte o valor"));
     }
-    card.appendChild(preco);
+
+    // Demais períodos (trimestral, semestral...) com valor por mês e economia.
+    var outros = P.precosValidos(plano).filter(function (p) { return p !== principal; });
+    if (outros.length) {
+      var lista = el("ul", "plano__periodos");
+      outros.forEach(function (preco) {
+        var item = el("li", "plano__periodo-item");
+        var linha = el("div", "plano__periodo-linha");
+        linha.appendChild(el("span", "plano__periodo-nome", preco.tipo));
+        linha.appendChild(el("strong", "plano__periodo-valor", P.formatarValor(preco.valor).texto));
+        item.appendChild(linha);
+        var comp = P.comparativo(plano, preco);
+        if (comp) {
+          var detalhe = el("p", "plano__periodo-detalhe", "sai " + comp.porMes.texto + "/mês");
+          if (comp.economia) {
+            detalhe.appendChild(document.createTextNode(" · "));
+            detalhe.appendChild(el("span", "plano__economia", "economize " + comp.economia.texto));
+          }
+          item.appendChild(detalhe);
+        }
+        lista.appendChild(item);
+      });
+      card.appendChild(lista);
+    }
 
     if (plano.descricao) card.appendChild(el("p", "plano__descricao", plano.descricao));
 
-    var botao = el("a", "btn " + (plano.destaque ? "btn--laranja" : "btn--contorno"));
-    botao.href = "#";
-    botao.setAttribute("data-whatsapp", chave);
-    botao.setAttribute("aria-label",
-      (valor ? "Quero me matricular em " : "Consultar o valor de ") + plano.nome + " — conversar pelo WhatsApp");
-    botao.innerHTML = '<svg class="btn__icone" aria-hidden="true"><use href="#icone-whatsapp"/></svg>';
-    botao.appendChild(document.createTextNode(valor ? "QUERO ESTE PLANO" : "CONSULTAR VALOR"));
-    card.appendChild(botao);
+    card.appendChild(principal
+      ? botaoWhatsApp(chave, "QUERO ESTE PLANO", "Quero me matricular em " + plano.nome,
+          plano.destaque ? "btn--laranja" : "btn--contorno")
+      : botaoWhatsApp(chave, "CONSULTAR VALOR", "Consultar o valor de " + plano.nome, "btn--contorno"));
     return card;
+  }
+
+  function criarAvulso(item, chave) {
+    var valor = P.formatarValor(item.valor);
+    var li = el("li", "avulso");
+    li.id = "avulso-" + item.id;
+    var info = el("div", "avulso__info");
+    info.appendChild(el("span", "avulso__nome", item.nome));
+    var preco = el("span", "avulso__preco", valor ? valor.texto : "Consulte");
+    if (item.unidade && valor) preco.appendChild(el("small", "", " " + item.unidade));
+    info.appendChild(preco);
+    li.appendChild(info);
+    li.appendChild(botaoWhatsApp(chave, "AGENDAR", item.nome, "btn--contorno btn--pequeno"));
+    return li;
   }
 
   /* ---------- Links de WhatsApp ---------- */

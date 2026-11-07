@@ -62,23 +62,56 @@ test("valores das mensalidades são formatados em reais", () => {
   for (const v of [null, undefined, 0, -10, "120", NaN, Infinity]) assert.equal(P.formatarValor(v), null);
 });
 
-test("mensagem do plano cita o valor quando ele existe", () => {
-  assert.equal(P.mensagemPlano({ nome: "Judô", valor: 100, periodo: "mês" }),
-    "Olá! Vi no site a mensalidade de Judô (R$ 100,00/mês) e quero me matricular na Academia Base II.");
-  assert.equal(P.mensagemPlano({ nome: "Judô", valor: null }),
-    "Olá! Vi no site da Academia Base II e gostaria de saber o valor da mensalidade de Judô.");
+test("mensagem do plano lista todos os períodos com valor", () => {
+  const plano = { nome: "Judô", precos: [{ tipo: "Mensal", valor: 100, meses: 1 }, { tipo: "Trimestral", valor: 270, meses: 3 }] };
+  assert.equal(P.mensagemPlano(plano),
+    "Olá! Vi no site os valores de Judô (mensal R$ 100,00, trimestral R$ 270,00) e quero me matricular na Academia Base II.");
+  assert.equal(P.mensagemPlano({ nome: "Judô", precos: [] }),
+    "Olá! Vi o site da Academia Base II e gostaria de saber o valor da mensalidade de Judô.");
 });
 
-test("planos configurados são válidos", () => {
-  assert.ok(config.planos.length >= 1);
+test("pacotes mostram o valor por mês e a economia sobre o mensal", () => {
+  const plano = config.planos.find((p) => p.id === "musculacao");
+  const [mensal, tri, sem] = plano.precos;
+  assert.equal(P.precoPrincipal(plano), mensal);
+  assert.equal(P.comparativo(plano, mensal), null);
+  assert.equal(P.comparativo(plano, tri).porMes.texto, "R$ 115,00");
+  assert.equal(P.comparativo(plano, tri).economia.texto, "R$ 15,00");
+  assert.equal(P.comparativo(plano, sem).porMes.texto, "R$ 105,00");
+  assert.equal(P.comparativo(plano, sem).economia.texto, "R$ 90,00");
+  // pacote mais caro que o mensal: sem "economia"
+  const caro = { precos: [{ valor: 100, meses: 1 }, { valor: 330, meses: 3 }] };
+  assert.equal(P.comparativo(caro, caro.precos[1]).economia, null);
+});
+
+test("valores informados pela academia", () => {
+  const valores = JSON.parse(JSON.stringify(Object.fromEntries(config.planos.map((p) => [p.id, p.precos.map((x) => [x.tipo, x.valor])]))));
+  assert.deepEqual(valores.musculacao, [["Mensal", 120], ["Trimestral", 345], ["Semestral", 630]]);
+  assert.deepEqual(valores.black, [["Mensal", 145], ["Trimestral", 405], ["Semestral", 720]]);
+  assert.deepEqual(valores["muay-thai"], [["Mensal", 115], ["Trimestral", 330]]);
+  assert.deepEqual(valores["jiu-jitsu"], valores["muay-thai"]);
+  assert.deepEqual(valores.ginastica, [["Mensal", 80]]);
+  assert.deepEqual(valores.sertanejo, [["Mensal", 75]]);
+  assert.deepEqual(valores["judo-kids"], [["Mensal", 80]]);
+  assert.deepEqual(JSON.parse(JSON.stringify(config.avulsos.map((a) => [a.id, a.valor]))), [["avaliacao-fisica", 30], ["aula-avulsa", 20]]);
+});
+
+test("planos e avulsos configurados são válidos", () => {
   const ids = new Set();
   for (const p of config.planos) {
     assert.match(p.id, /^[a-z0-9-]+$/);
     assert.ok(!ids.has(p.id), "id repetido: " + p.id);
     ids.add(p.id);
     assert.ok(p.nome);
-    assert.ok(p.valor === null || P.valorValido(p.valor), "valor inválido em " + p.id);
+    for (const x of p.precos) {
+      assert.ok(P.valorValido(x.valor), "valor inválido em " + p.id);
+      assert.ok(x.tipo && Number.isInteger(x.meses) && x.meses >= 1, "período inválido em " + p.id);
+    }
     const url = new URL(W.montarLink(NUMERO_TESTE, P.mensagemPlano(p)));
     assert.equal(url.searchParams.get("text"), P.mensagemPlano(p));
+  }
+  for (const a of config.avulsos) {
+    assert.ok(a.nome && a.acao && P.valorValido(a.valor));
+    assert.equal(P.mensagemAvulso(a), `Olá! Quero ${a.acao} na Academia Base II (${P.formatarValor(a.valor).texto}).`);
   }
 });

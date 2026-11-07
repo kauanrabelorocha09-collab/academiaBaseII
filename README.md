@@ -24,14 +24,16 @@ mudar o número do WhatsApp, as mensagens ou as fotos.
    (veja `assets/img/modalidades/LEIA-ME.md`) e a foto da academia/equipe em
    `assets/img/equipe.jpg`. As imagens atuais são **referências provisórias**
    (marcadas com o selo "Imagem de referência") e devem ser substituídas.
-3. **Logo oficial** — salve a logo da academia em `assets/img/logo.png`
-   (PNG com fundo transparente, quadrada, ex.: 512×512 px). Ela aparece no topo
-   e no início da página. Enquanto o arquivo não existir, aparece um escudo
-   provisório "BASE II".
-4. **Mensalidades** — em `js/config.js`, preencha `valor` de cada item de
-   `planos` (ex.: `valor: 120` ou `valor: 89.90`). Com `valor: null` o card mostra
-   "Consulte o valor" e o botão pergunta o preço pelo WhatsApp. Também dá para
-   mudar o nome, a descrição, a etiqueta (`selo`), remover ou adicionar planos.
+3. **Logo** — `assets/img/logo.svg` é a logo oficial redesenhada em vetor (fica
+   nítida em qualquer tamanho). O arquivo original enviado pela academia está
+   em `assets/img/logo-original.png`.
+4. **Mensalidades** — tudo em `js/config.js`:
+   - `planos`: cada plano tem uma lista `precos` com `tipo` ("Mensal",
+     "Trimestral"...), `valor` (ex.: `120` ou `89.90`) e `meses` (1, 3, 6). Planos
+     com vários períodos viram cards grandes, com o valor por mês e a economia
+     calculados sozinhos; planos com um único preço aparecem em "Outras aulas";
+     `precos: []` mostra "Consulte o valor".
+   - `avulsos`: avaliação física, aula avulsa etc. (pagamento único).
 5. **Fotos dos donos** — Renan Rocha e Francinésio Carlos: veja
    `assets/img/donos/LEIA-ME.md`.
 6. **Atividades aquáticas** — em `js/config.js`, liste em `atividadesAquaticas`
@@ -58,7 +60,8 @@ Todos os botões usam o formato `https://wa.me/55DDDNUMERO?text=MENSAGEM_CODIFIC
 | Judô                          | `judo`          |
 | Piscina                       | `piscina`       |
 | Chamada final                 | `chamada-final` |
-| Cards de mensalidade          | `plano-<id>` (mensagem montada em `js/planos.js`, cita o valor quando existe) |
+| Cards de mensalidade          | `plano-<id>` (mensagem montada em `js/planos.js`, cita os valores) |
+| Avulsos                       | `avulso-<id>` (idem) |
 
 ## Testes
 

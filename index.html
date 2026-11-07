@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Academia Base II — Francisco Morato | Mensalidades e Modalidades</title>
-  <meta name="description" content="Academia Base II em Francisco Morato (SP), de Renan Rocha e Francinésio Carlos. Mensalidades de musculação, jiu-jitsu com a Equipe Renan Rocha, Muay Thai, Judô e piscina. Matricule-se pelo WhatsApp.">
+  <meta name="description" content="Academia Base II em Francisco Morato (SP), de Renan Rocha e Francinésio Carlos. Mensalidades de musculação, Plano Black, jiu-jitsu com a Equipe Renan Rocha, Muay Thai, ginástica, sertanejo e Judô Kids. Matricule-se pelo WhatsApp.">
   <meta name="theme-color" content="#0d0d0d">
   <link rel="stylesheet" href="css/styles.css">
 
@@ -21,11 +21,9 @@
   <header class="topo">
     <div class="container topo__linha">
       <a class="marca" href="#inicio" aria-label="Academia Base II — início">
-        <!-- Logo oficial: salve em assets/img/logo.png -->
-        <img class="marca__logo" src="assets/img/logo.png"
-             data-referencia="assets/img/referencia/logo.svg"
-             alt="" width="44" height="44" decoding="async">
-        <span class="marca__nome">ACADEMIA <span>BASE II</span></span>
+        <img class="marca__logo" src="assets/img/logo.svg"
+             data-referencia="assets/img/logo-original.png"
+             alt="Academia Base II" width="78" height="42" decoding="async">
       </a>
       <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu">
         <span class="sr-only">Abrir menu</span>
@@ -47,15 +45,15 @@
         <div class="hero__conteudo">
           <p class="sobretitulo">Academia Base II · Francisco Morato – SP</p>
           <h1>Treine forte.<br><span>Encontre a sua modalidade.</span></h1>
-          <p class="hero__texto">Musculação, jiu-jitsu com a Equipe Renan Rocha, Muay Thai, Judô e atividades aquáticas em um só lugar, em Francisco Morato.</p>
+          <p class="hero__texto">Musculação, jiu-jitsu com a Equipe Renan Rocha, Muay Thai, Judô Kids, ginástica, sertanejo e atividades aquáticas em um só lugar, em Francisco Morato.</p>
           <div class="hero__acoes">
             <a class="btn btn--laranja" href="#mensalidades">Ver mensalidades</a>
             <a class="btn btn--contorno" href="#modalidades">Conheça as modalidades</a>
           </div>
         </div>
-        <img class="hero__logo" src="assets/img/logo.png"
-             data-referencia="assets/img/referencia/logo.svg"
-             alt="Logo da Academia Base II" width="360" height="360" decoding="async">
+        <img class="hero__logo" src="assets/img/logo.svg"
+             data-referencia="assets/img/logo-original.png"
+             alt="Logo da Academia Base II" width="416" height="224" decoding="async">
       </div>
     </section>
 
@@ -67,8 +65,19 @@
           <h2 id="mensalidades-titulo">Mensalidades</h2>
           <p class="secao__texto">Escolha a sua modalidade e fale direto com a academia para fazer a matrícula.</p>
         </header>
-        <!-- Cards gerados a partir de "planos" em js/config.js (valores editáveis lá) -->
+        <!-- Cards gerados a partir de "planos" e "avulsos" em js/config.js (valores editáveis lá) -->
         <div id="planos" class="planos"></div>
+
+        <div id="bloco-outros" class="planos__bloco" hidden>
+          <h3 class="planos__subtitulo">Outras aulas</h3>
+          <div id="planos-outros" class="planos planos--compactos"></div>
+        </div>
+
+        <div id="bloco-avulsos" class="planos__bloco" hidden>
+          <h3 class="planos__subtitulo">Avulsos</h3>
+          <ul id="avulsos" class="avulsos"></ul>
+        </div>
+
         <p id="planos-observacao" class="planos__observacao" hidden></p>
       </div>
     </section>
