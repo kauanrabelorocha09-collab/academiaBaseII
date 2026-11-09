@@ -13,6 +13,23 @@ node scripts/gerar-arquivo-unico.js   # cria entrega/academia-base-ii-site.html
 O arquivo já leva CSS, JavaScript e imagens embutidos. Gere-o de novo sempre que
 mudar o número do WhatsApp, as mensagens ou as fotos.
 
+## Publicar de graça (Cloudflare Pages) e ver quantas pessoas acessam
+
+```bash
+bash scripts/gerar-pacote-publicacao.sh   # cria entrega/academia-base-ii-publicar.zip
+```
+
+1. Crie uma conta gratuita em dash.cloudflare.com.
+2. **Workers e Pages → Criar → Pages → Enviar ativos (upload direto)**, dê um
+   nome ao projeto (vira o endereço `nome.pages.dev`) e envie o `.zip`.
+3. Para contar visitas: no projeto, **Métricas → Web Analytics → Ativar**. É
+   gratuito, não usa cookies e mostra visitantes, páginas, países e origem.
+4. Para atualizar o site depois: gere o `.zip` de novo e envie em
+   **Criar nova implantação** no mesmo projeto.
+
+O plano gratuito da Cloudflare permite uso comercial (o plano gratuito da
+Vercel, por exemplo, é só para uso pessoal).
+
 ## ⚠️ Antes de publicar (obrigatório)
 
 1. **Número do WhatsApp** — já configurado: (11) 94488-7323. Para trocar, abra
