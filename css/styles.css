@@ -121,12 +121,22 @@ h1, h2, h3 { font-family: var(--fonte-titulo); line-height: 1.1; margin: 0 0 .5e
 
 /* ---------- Hero ---------- */
 .hero {
-  position: relative;
+  position: relative; isolation: isolate;
   padding: clamp(5rem, 14vw, 9rem) 0 clamp(4rem, 10vw, 7rem);
-  background:
-    radial-gradient(circle at 85% 20%, rgba(247, 165, 53, .28), transparent 45%),
-    linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+  background: #0d0d0d;
   overflow: hidden;
+}
+/* Foto da equipe ao fundo, escurecida para o texto continuar legível */
+.hero .hero__foto { position: absolute; inset: 0; z-index: -2; aspect-ratio: auto; background: #0d0d0d; }
+.hero__foto img { opacity: .5; object-position: center 40%; }
+.hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(247, 165, 53, .22), transparent 45%),
+    linear-gradient(90deg, rgba(13, 13, 13, .96) 0%, rgba(13, 13, 13, .82) 50%, rgba(13, 13, 13, .55) 100%);
+}
+@media (max-width: 860px) {
+  .hero::before { background: linear-gradient(180deg, rgba(13, 13, 13, .7) 0%, rgba(13, 13, 13, .92) 45%); }
 }
 .hero::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: var(--laranja);
@@ -220,6 +230,17 @@ h1, h2, h3 { font-family: var(--fonte-titulo); line-height: 1.1; margin: 0 0 .5e
 
 /* ---------- Donos ---------- */
 .donos { background: var(--grafite); border-top: 1px solid rgba(255, 255, 255, .06); }
+.donos__topo { display: grid; grid-template-columns: 1fr minmax(0, 380px); gap: 2rem; align-items: end; margin-bottom: 2.5rem; }
+.donos__topo .secao__cabecalho { margin-bottom: 0; }
+.donos .donos__juntos { aspect-ratio: 4 / 3; border-radius: var(--raio); border: 1px solid rgba(255, 255, 255, .08); }
+.donos__juntos img { object-position: center 30%; }
+.donos__juntos figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 1.5rem .9rem .6rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, .8)); font-size: .8rem; color: #e6e6e6;
+}
+@media (max-width: 760px) {
+  .donos__topo { grid-template-columns: 1fr; }
+}
 .donos__grade { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 .dono {
   display: grid; grid-template-columns: minmax(0, 44%) 1fr; align-items: stretch;
