@@ -28,7 +28,7 @@ test("número com máscara é normalizado para dígitos", () => {
 });
 
 test("todas as mensagens são codificadas corretamente e voltam idênticas", () => {
-  const chaves = ["geral", "chamada-final", "musculacao", "jiu-jitsu", "muay-thai", "judo", "piscina"];
+  const chaves = ["geral", "chamada-final", "musculacao", "jiu-jitsu", "muay-thai", "judo-kids", "ginastica", "sertanejo"];
   for (const chave of chaves) {
     const msg = config.mensagens[chave];
     assert.ok(msg, `mensagem ausente: ${chave}`);
@@ -50,8 +50,9 @@ test("mensagens exigidas pelo briefing", () => {
   assert.match(config.mensagens["jiu-jitsu"], /Equipe Renan Rocha/);
   assert.match(config.mensagens.musculacao, /musculação/);
   assert.match(config.mensagens["muay-thai"], /Muay Thai/);
-  assert.match(config.mensagens.judo, /Judô/);
-  assert.match(config.mensagens.piscina, /atividades aquáticas/);
+  assert.match(config.mensagens["judo-kids"], /Judô Kids/);
+  assert.match(config.mensagens.ginastica, /ginástica/);
+  assert.match(config.mensagens.sertanejo, /sertanejo/);
 });
 
 test("valores das mensalidades são formatados em reais", () => {
@@ -93,6 +94,8 @@ test("valores informados pela academia", () => {
   assert.deepEqual(valores.ginastica, [["Mensal", 80]]);
   assert.deepEqual(valores.sertanejo, [["Mensal", 75]]);
   assert.deepEqual(valores["judo-kids"], [["Mensal", 80]]);
+  assert.equal(valores.piscina, undefined, "a academia não tem piscina");
+  assert.match(config.planos.find((p) => p.id === "black").descricao, /tudo/i);
   assert.deepEqual(JSON.parse(JSON.stringify(config.avulsos.map((a) => [a.id, a.valor]))), [["avaliacao-fisica", 30], ["aula-avulsa", 20]]);
 });
 

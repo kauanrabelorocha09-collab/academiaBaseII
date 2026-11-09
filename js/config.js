@@ -31,18 +31,14 @@ window.ACADEMIA_CONFIG = {
       "Olá! Tenho interesse em treinar jiu-jitsu com a Equipe Renan Rocha. Poderiam me informar os horários e valores?",
     "muay-thai":
       "Olá! Gostaria de saber mais sobre as aulas de Muay Thai, os horários e os valores.",
-    judo:
-      "Olá! Gostaria de saber mais sobre as aulas de Judô, os horários e os valores.",
-    piscina:
-      "Olá! Gostaria de saber quais atividades aquáticas estão disponíveis na Academia Base II.",
+    "judo-kids":
+      "Olá! Gostaria de saber mais sobre as aulas de Judô Kids, os horários e os valores.",
+    ginastica:
+      "Olá! Gostaria de saber mais sobre as aulas de ginástica, os horários e os valores.",
+    sertanejo:
+      "Olá! Gostaria de saber mais sobre as aulas de sertanejo, os horários e os valores.",
   },
 
-  /*
-   * Liste SOMENTE as atividades aquáticas efetivamente oferecidas pela academia,
-   * por exemplo: ["Natação", "Hidroginástica"].
-   * Deixe vazio ([]) enquanto não houver confirmação — nenhuma lista é exibida.
-   */
-  atividadesAquaticas: [],
 
   /*
    * ============================================================
@@ -73,7 +69,8 @@ window.ACADEMIA_CONFIG = {
     {
       id: "black",
       nome: "Plano Black",
-      descricao: "Pergunte pelo WhatsApp tudo o que está incluído no Plano Black.",
+      descricao: "Acesso a tudo o que a academia oferece: musculação, Muay Thai, jiu-jitsu, ginástica e sertanejo.",
+      selo: "Acesso total",
       destaque: true,
       precos: [
         { tipo: "Mensal", valor: 145, meses: 1 },
@@ -103,7 +100,7 @@ window.ACADEMIA_CONFIG = {
     {
       id: "ginastica",
       nome: "Ginástica",
-      descricao: "Aulas de ginástica.",
+      descricao: "Aulas em grupo para condicionamento e disposição.",
       precos: [{ tipo: "Mensal", valor: 80, meses: 1 }],
     },
     {
@@ -115,14 +112,8 @@ window.ACADEMIA_CONFIG = {
     {
       id: "judo-kids",
       nome: "Judô Kids",
-      descricao: "Judô para crianças.",
+      descricao: "Judô para crianças, com disciplina e diversão.",
       precos: [{ tipo: "Mensal", valor: 80, meses: 1 }],
-    },
-    {
-      id: "piscina",
-      nome: "Piscina",
-      descricao: "Atividades aquáticas na piscina da academia.",
-      precos: [],
     },
   ],
 

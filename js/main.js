@@ -174,18 +174,6 @@
     }, 4500);
   }
 
-  /* ---------- Atividades aquáticas (somente as confirmadas) ---------- */
-  var listaAquatica = document.getElementById("atividades-aquaticas");
-  var atividades = (config.atividadesAquaticas || []).filter(Boolean);
-  if (listaAquatica && atividades.length) {
-    atividades.forEach(function (nome) {
-      var item = document.createElement("li");
-      item.textContent = nome;
-      listaAquatica.appendChild(item);
-    });
-    listaAquatica.hidden = false;
-  }
-
   /* ---------- Fotos oficiais com imagem de referência provisória ---------- */
   var imagens = document.querySelectorAll("img[data-referencia]");
   Array.prototype.forEach.call(imagens, function (img) {

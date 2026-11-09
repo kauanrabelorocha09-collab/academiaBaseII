@@ -22,7 +22,7 @@ const servidor = http.createServer((req, res) => {
   });
 });
 
-const CHAVES = ["geral", "musculacao", "jiu-jitsu", "muay-thai", "judo", "piscina", "chamada-final"];
+const CHAVES = ["geral", "musculacao", "jiu-jitsu", "muay-thai", "judo-kids", "ginastica", "sertanejo", "chamada-final"];
 const configTexto = fs.readFileSync(path.join(RAIZ, "js/config.js"), "utf8");
 const Planos = require("../js/planos.js");
 const CONFIG = (() => { const w = {}; new Function("window", configTexto)(w); return w.ACADEMIA_CONFIG; })();
@@ -97,7 +97,7 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
   });
 
   await caso("cada modalidade tem foto, nome, descrição e botão TENHO INTERESSE", async () => {
-    for (const id of ["jiu-jitsu", "musculacao", "muay-thai", "judo", "piscina"]) {
+    for (const id of ["jiu-jitsu", "musculacao", "muay-thai", "judo-kids", "ginastica", "sertanejo"]) {
       const art = page.locator(`article#${id}`);
       await art.scrollIntoViewIfNeeded();
       await page.waitForFunction((i) => { const img = document.querySelector(`#${i} img`); return img.complete && img.naturalWidth > 0; }, id);
@@ -159,6 +159,10 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
     await page.waitForFunction(() => [...document.querySelectorAll(".marca__logo, .hero__logo")].every((i) => i.complete && i.naturalWidth > 0));
     assert.match(await page.locator(".hero .sobretitulo").innerText(), /Francisco Morato/i);
     assert.match(await page.title(), /Francisco Morato/);
+  });
+
+  await caso("nada de piscina no site", async () => {
+    assert.doesNotMatch(await page.locator("body").innerText(), /piscina|aquátic/i);
   });
 
   await caso("chamada final com título, texto e botão", async () => {

@@ -36,9 +36,7 @@ mudar o número do WhatsApp, as mensagens ou as fotos.
    - `avulsos`: avaliação física, aula avulsa etc. (pagamento único).
 5. **Fotos dos donos** — Renan Rocha e Francinésio Carlos: veja
    `assets/img/donos/LEIA-ME.md`.
-6. **Atividades aquáticas** — em `js/config.js`, liste em `atividadesAquaticas`
-   somente as atividades que a academia oferece de fato. Vazio = nada é exibido.
-7. Rode os testes (abaixo) com o número já preenchido.
+6. Rode os testes (abaixo) com o número já preenchido.
 
 Seções da página: início (logo, Francisco Morato), **mensalidades**,
 modalidades, **os donos** (Renan Rocha e Francinésio Carlos) e chamada final.
@@ -57,8 +55,9 @@ Todos os botões usam o formato `https://wa.me/55DDDNUMERO?text=MENSAGEM_CODIFIC
 | Jiu-jitsu (Equipe Renan Rocha)| `jiu-jitsu`     |
 | Musculação                    | `musculacao`    |
 | Muay Thai                     | `muay-thai`     |
-| Judô                          | `judo`          |
-| Piscina                       | `piscina`       |
+| Judô Kids                     | `judo-kids`     |
+| Ginástica                     | `ginastica`     |
+| Sertanejo                     | `sertanejo`     |
 | Chamada final                 | `chamada-final` |
 | Cards de mensalidade          | `plano-<id>` (mensagem montada em `js/planos.js`, cita os valores) |
 | Avulsos                       | `avulso-<id>` (idem) |

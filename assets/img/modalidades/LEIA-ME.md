@@ -7,8 +7,9 @@ Salve aqui as fotos reais da Academia Base II com exatamente estes nomes:
 | `jiu-jitsu.jpg`  | Jiu-jitsu — Equipe Renan Rocha   |
 | `musculacao.jpg` | Musculação                       |
 | `muay-thai.jpg`  | Muay Thai                        |
-| `judo.jpg`       | Judô                             |
-| `piscina.jpg`    | Piscina e atividades aquáticas   |
+| `judo-kids.jpg`  | Judô Kids                        |
+| `ginastica.jpg`  | Ginástica                        |
+| `sertanejo.jpg`  | Sertanejo (dança)                |
 
 A foto da chamada final (academia ou equipe) vai em `assets/img/equipe.jpg`.
 

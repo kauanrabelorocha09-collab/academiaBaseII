@@ -290,10 +290,18 @@ h1, h2, h3 { font-family: var(--fonte-titulo); line-height: 1.1; margin: 0 0 .5e
   font-weight: 800; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase;
 }
 
-.modalidades__grade { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+/* 5 modalidades: 3 na primeira linha e 2 (mais largas) na segunda */
+.modalidades__grade { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.5rem; }
+.modalidades__grade > .modalidade { grid-column: span 2; }
+.modalidades__grade > .modalidade:nth-child(n+4) { grid-column: span 3; }
+.modalidades__grade > .modalidade:nth-child(n+4) .midia { aspect-ratio: 16 / 9; }
 
 @media (max-width: 1040px) {
   .modalidades__grade { grid-template-columns: repeat(2, 1fr); }
+  .modalidades__grade > .modalidade,
+  .modalidades__grade > .modalidade:nth-child(n+4) { grid-column: auto; }
+  .modalidades__grade > .modalidade:nth-child(n+4) .midia { aspect-ratio: 4 / 3; }
+  .modalidades__grade > .modalidade:last-child:nth-child(odd) { grid-column: 1 / -1; }
 }
 @media (max-width: 760px) {
   .modalidade--destaque { grid-template-columns: 1fr; }
