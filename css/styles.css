@@ -222,25 +222,30 @@ h1, h2, h3 { font-family: var(--fonte-titulo); line-height: 1.1; margin: 0 0 .5e
 .donos { background: var(--grafite); border-top: 1px solid rgba(255, 255, 255, .06); }
 .donos__grade { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 .dono {
-  display: grid; grid-template-columns: 200px 1fr; align-items: center;
+  display: grid; grid-template-columns: minmax(0, 44%) 1fr; align-items: stretch;
   background: var(--preto);
   border: 1px solid rgba(255, 255, 255, .08);
-  border-left: 6px solid var(--laranja);
+  border-top: 4px solid var(--laranja);
   border-radius: var(--raio);
   overflow: hidden;
 }
-.dono .dono__foto { aspect-ratio: 1 / 1; width: 100%; min-width: 0; }
-.dono__corpo { padding: 1.5rem; }
+.dono .dono__foto { aspect-ratio: 4 / 5; width: 100%; min-width: 0; }
+.dono__foto img { object-position: center top; }
+.dono__corpo { display: flex; flex-direction: column; justify-content: center; padding: clamp(1.25rem, 3vw, 2rem); }
 .dono__cargo { margin: 0 0 .35rem; color: var(--laranja); font-weight: 800; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; }
-.dono h3 { font-size: clamp(1.4rem, 3vw, 1.8rem); text-transform: uppercase; }
+.dono h3 { font-size: clamp(1.4rem, 3vw, 1.9rem); text-transform: uppercase; margin-bottom: .75rem; }
+.dono__lema { margin: 0 0 .6rem; font-family: var(--fonte-titulo); font-size: .82rem; letter-spacing: .04em; text-transform: uppercase; color: var(--texto); }
+.dono__frase {
+  margin: 0 0 1rem; padding-left: .85rem; border-left: 3px solid var(--laranja);
+  font-size: 1.05rem; font-style: italic; color: var(--texto);
+}
 .dono p:last-child { margin: 0; color: var(--texto-suave); }
 .dono strong { color: var(--texto); }
-@media (max-width: 900px) {
-  .donos__grade { grid-template-columns: 1fr; }
+@media (max-width: 1000px) {
+  .donos__grade { grid-template-columns: 1fr; max-width: 680px; }
 }
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .dono { grid-template-columns: 1fr; }
-  .dono .dono__foto { aspect-ratio: 4 / 3; }
 }
 
 /* ---------- Modalidades ---------- */
