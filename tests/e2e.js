@@ -139,6 +139,9 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
   await caso("seção dos donos com Renan Rocha e Francinésio Carlos", async () => {
     const nomes = await page.locator("#donos .dono h3").allInnerTexts();
     assert.deepEqual(nomes.map((n) => n.toUpperCase()), ["RENAN ROCHA", "FRANCINÉSIO CARLOS"]);
+    // Os dois aparecem como donos, com o mesmo peso.
+    assert.deepEqual((await page.locator("#donos .dono__cargo").allInnerTexts()).map((t) => t.toUpperCase()), ["DONO", "DONO"]);
+    assert.doesNotMatch(await page.locator("#donos").innerText(), /sócio/i);
     for (const img of await page.locator("#donos img").all()) {
       await img.scrollIntoViewIfNeeded();
       await assert.doesNotReject(img.evaluate((i) => i.complete && i.naturalWidth > 0 ? 1 : new Promise((ok) => i.addEventListener("load", ok))));
