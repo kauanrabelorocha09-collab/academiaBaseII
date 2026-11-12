@@ -112,9 +112,9 @@ def current(x0, y0, L, amp, wl, w=3.5, ph=0):
     poly(ribbon(c, lens(len(c), w, 0.9, 0.5)), SKIN)
 
 
-def kaze(x0, y0, L, thick, amp=18, wl=520, gdir=1, curl=True):
+def kaze(x0, y0, L, thick, amp=18, wl=520, gdir=1, curl=True, c0=None):
     xs = np.linspace(0, L, 60)
-    c = np.stack([x0 + xs, y0 + amp * np.sin(xs / wl * 2 * math.pi)], 1)
+    c = c0 if c0 is not None else np.stack([x0 + xs, y0 + amp * np.sin(xs / wl * 2 * math.pi)], 1)
     if curl:  # ponta enrolada
         e = c[-1]; a = np.linspace(0, 1.55 * math.pi, 28); r = thick * (1.0 - 0.7 * a / a[-1]) * 1.6
         cu = np.stack([e[0] + thick * 0.0 + r * np.sin(a) - 0, e[1] - thick * 1.6 + r * np.cos(a)], 1)
@@ -332,41 +332,126 @@ def tail_tuft():
 
 
 # ---------------------------------------------------------------- COMPOSICAO
+def wrap_draw(fn, xmin, xmax):
+    global OX
+    for n in range(math.floor(xmin / W), math.floor(xmax / W) + 1):
+        OX = -n * W; fn()
+    OX = 0
+
+
+PITCH = 620.0; SLOPE = PITCH / W   # duas helices intercaladas -> bandas a cada ~310
+def hy(h, u): return -60 + h * PITCH / 2 + SLOPE * u + 26 * math.sin(u / 240 + h * 1.7)
+def fscale(y): return 1.0 if y < 1300 else 1.28
+
+
+def puff(x, y, r):
+    steps = 8
+    for i in range(steps):
+        t = i / (steps - 1)
+        disc((x, y - r * 0.36 * t), r * (1 - 0.46 * t), lerpc(G(70), SKIN, t ** 0.95))
+    an = np.linspace(math.radians(8), math.radians(172), 14)
+    line(np.stack([x + r * 0.97 * np.cos(an), y + r * 0.97 * np.sin(an)], 1), 4.5, BLACK)
+
+
+def curl(cx, cy, R, flip):
+    n = 120; t = np.linspace(0, 1, n); kk = max(1.0, R / 105)
+    def sp(k, r1=0.3):
+        ang = math.pi + (-math.pi * 1.0 - math.pi) * t
+        r = R * k * (1 - (1 - r1) * t ** 1.1)
+        return np.stack([cx + flip * r * np.cos(ang), cy - r * np.sin(ang)], 1)
+    for k in (0.93, 0.7, 0.5):
+        line(sp(k, 0.35), 2.0 * kk, G(70))
+    poly(ribbon(sp(1.0), lens(n, 20 * kk, 0.7)), SKIN)
+    poly(ribbon(sp(0.74, 0.35), lens(n, 10 * kk, 0.8)), SKIN)
+    poly(ribbon(sp(0.5, 0.4), lens(n, 5 * kk, 0.8)), SKIN)
+    # gancho final
+    e = sp(1.0)[int(n * 0.5)]
+    disc(e, 7 * kk, SKIN)
+
+
 def build():
     global OX
     OX = 0
-    # correntes de agua (fundo)
-    for _ in range(70):
-        current(random.uniform(-200, W), random.uniform(120, 2950), random.uniform(180, 520), random.uniform(6, 22), random.uniform(50, 130), random.uniform(1.8, 3.2), random.uniform(0, 6))
-    # ondas
-    rows = []
-    y = 150
-    while y < 2900:
-        rows.append(y); y += random.choice([170, 190, 210]) if y < 1280 else random.choice([250, 275, 300])
-    for ri, y in enumerate(rows):
-        if 1280 < y < 1500: continue
-        x = -150 + (170 if ri % 2 else 0) + random.uniform(-40, 40)
-        while x < W + 200:
-            R = random.uniform(105, 150) if y < 1280 else random.uniform(175, 235)
-            fl = 1 if random.random() < 0.82 else -1
-            for ox in (-W, 0, W):
-                OX = ox
-                if -250 < x + ox < W + 250: wave(x, y + random.uniform(-25, 25) if False else y, R, fl)
-            x += random.uniform(255, 320) if y < 1280 else random.uniform(340, 400)
-    # barras de vento
-    for (y0, n, th, gd) in ((1330, 4, 52, 1), (2865, 3, 50, -1)):
-        pass
-    for r in range(5):
+    rr = random.Random(3)
+    helices = []
+    for h in (0, 1):
+        items = {"curl": [], 0: [], 1: [], 2: []}
+        u = -200.0
+        while hy(h, u) < 3150:
+            y = hy(h, u); f = fscale(y)
+            if int(u) % 1 == 0:
+                pass
+            u += 1e9 if False else 0
+            u += 40
+        # curvas
+        u = -300.0
+        while hy(h, u) < 3100:
+            y = hy(h, u); f = fscale(y)
+            items["curl"].append((u, y + rr.uniform(105, 135) * f, rr.uniform(85, 115) * f, 1 if rr.random() < 0.8 else -1))
+            u += rr.uniform(300, 360) * f
+        for row, (off, (ra, rb), step) in enumerate(((-46, (16, 24), 38), (-12, (26, 36), 52), (18, (30, 42), 58))):
+            u = -300.0 + rr.uniform(0, 40)
+            while hy(h, u) < 3150:
+                y = hy(h, u); f = fscale(y)
+                items[row].append((u + rr.uniform(-8, 8), y + (off + rr.uniform(-12, 12)) * f, rr.uniform(ra, rb) * f))
+                u += step * f
+        helices.append(items)
+    # fumaca cinza (transicoes)
+    from PIL import ImageFilter, ImageChops
+    sc = S / 4
+    sh = Image.new("L", (int(W * sc), int(H * sc)), 0); sd = ImageDraw.Draw(sh)
+    def ell(cx, cy, rx, ry, v):
+        for dx in (-W, 0, W):
+            sd.ellipse([(cx + dx - rx) * sc, (cy - ry) * sc, (cx + dx + rx) * sc, (cy + ry) * sc], fill=v)
+    for it in helices:
+        for (u, y, R, fl) in it["curl"]:
+            ell(u % W, y + 0.1 * R, 1.3 * R, 1.1 * R, 34)
+        for (u, y, r) in it[0]:
+            ell(u % W, y - 25, 1.4 * r, 1.2 * r, 40)
+        for (u, y, r) in it[2][::2]:
+            ell(u % W, y + r * 1.5, 1.7 * r, 1.0 * r, 58)
+    sh = sh.filter(ImageFilter.GaussianBlur(9)).resize(img.size, Image.BICUBIC)
+    img.paste(Image.merge("RGB", (sh, sh, sh)))
+    # ondas: curvas e espuma
+    for it in helices:
+        for (u, cy, R, fl) in it["curl"]:
+            wrap_draw(lambda: curl(u, cy, R, fl), u - R * 1.1, u + R * 1.1)
+    # espuma: massa unica de pele, borda de bolhas, sombra cinza nas bordas
+    from PIL import ImageFilter, ImageChops
+    M = Image.new("L", img.size, 0); md = ImageDraw.Draw(M)
+    for it in helices:
+        for row in (0, 1, 2):
+            for (u, y, r) in it[row]:
+                for dx in (-W, 0, W):
+                    md.ellipse([(u % W + dx - r) * S, (y - r) * S, (u % W + dx + r) * S, (y + r) * S], fill=255)
+    Ms = ImageChops.offset(M, 0, -int(16 * S))
+    mb = np.asarray(M.filter(ImageFilter.GaussianBlur(15 * S)), np.float32) / 255.0
+    mbs = np.asarray(Ms.filter(ImageFilter.GaussianBlur(15 * S)), np.float32) / 255.0
+    tt = np.clip((0.4 * mb + 0.6 * mbs - 0.5) / 0.46, 0, 1) ** 1.25
+    base = np.array(G(80), np.float32); sk = np.array(SKIN, np.float32)
+    fimg = Image.fromarray((base + (sk - base) * tt[..., None]).astype(np.uint8))
+    img.paste(fimg, mask=M)
+    for it in helices:
+        for row in (1, 2):
+            for (u, y, r) in it[row]:
+                def arc(u=u, y=y, r=r):
+                    an = np.linspace(math.radians(5), math.radians(175), 16)
+                    line(np.stack([u + r * 0.96 * np.cos(an), y + r * 0.96 * np.sin(an)], 1), 4.2, BLACK)
+                wrap_draw(arc, u - r, u + r)
+    # barras de vento em helice no antebraco
+    for u0 in (3000, 4100, 5100):
+        for h in (0,):
+            def seg(u0=u0, h=h):
+                us = np.linspace(u0, u0 + 840, 60)
+                c = np.stack([us, [hy(h, v) + 155 + 20 * math.sin(v / 130) for v in us]], 1)
+                kaze(0, 0, 0, 58, gdir=1 if u0 % 2000 else -1, curl=True, c0=c)
+            if 1400 < hy(h, u0) < 2800: wrap_draw(seg, u0 - 100, u0 + 1100)
+    # cotovelo: barras acompanhando a articulacao
+    for r in range(3):
         for k in range(2):
             for ox in (-W, 0, W):
                 OX = ox
-                kaze(k * 700 - 160 + r * 130 + ox * 0 , 1290 + r * 46, 880, 54 - r * 2, amp=14, wl=620, gdir=1 if r % 2 == 0 else -1, curl=(r % 2 == 0))
-    OX = 0
-    for yb in (1640, 2010, 2380):
-        for k in range(2):
-            for ox in (-W, 0, W):
-                OX = ox
-                kaze(k * 700 - 250 + (yb % 400), yb, 860, 58, amp=26, wl=600, gdir=1 if (yb // 10) % 2 else -1, curl=True)
+                kaze(k * 700 - 160 + r * 130, 1300 + r * 64, 880, 56, amp=14, wl=620, gdir=1 if r % 2 == 0 else -1, curl=(r % 2 == 0))
     OX = 0
     for r in range(3):
         for k in range(2):
@@ -374,8 +459,7 @@ def build():
                 OX = ox
                 kaze(k * 700 - 100 + r * 190, 2800 + r * 52, 880, 52, amp=10, wl=700, gdir=-1 if r % 2 == 0 else 1, curl=(r % 2 == 1))
     OX = 0
-    # dragao (corpo percorre 5 posicoes de embrulho)
-    rng = random.Random(5)
+    # dragao (ombro e biceps)
     for ox in range(0, int(2.6 * W) + 1, W):
         OX = ox
         body(random.Random(5))
@@ -386,7 +470,6 @@ def build():
     for ox in range(0, int(2.6 * W) + 1, W):
         OX = ox
         if visible(len(P) - 1, 260): tail_tuft()
-    # cabeca (com wrap)
     for ox in (-W, 0, W):
         OX = ox; head()
     OX = 0
