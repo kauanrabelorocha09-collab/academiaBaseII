@@ -72,7 +72,7 @@ def grad_ribbon(c, w, c0, c1):
 
 # ---------------------------------------------------------------- ONDAS (NAMI)
 def wave(cx, cy, R, flip=1):
-    n = 150; t = np.linspace(0, 1, n)
+    n = 150; t = np.linspace(0, 1, n); kk = max(1.0, R / 125)
 
     def sp(k, r1=0.33):
         ang = math.pi + (-math.pi * 0.95 - math.pi) * t
@@ -83,13 +83,13 @@ def wave(cx, cy, R, flip=1):
     aa = np.linspace(0, 2 * math.pi, 60)
     poly(np.stack([cx + 1.04 * R * np.cos(aa), cy + 1.04 * R * np.sin(aa)], 1), BLACK)
     # sombra cinza difusa ao redor da crista
-    for wd, col in ((46, 20), (32, 32), (20, 46)):
+    for wd, col in ((46 * kk, 20), (32 * kk, 32), (20 * kk, 46)):
         poly(ribbon(outer[: int(n * 0.85)], lens(int(n * 0.85), wd, 0.6)), G(col))
-    poly(ribbon(outer, lens(n, 11, 0.7)), SKIN)
-    for k, wd in ((0.78, 5.5), (0.56, 3.6)):
+    poly(ribbon(outer, lens(n, 11 * kk, 0.7)), SKIN)
+    for k, wd in ((0.78, 5.5 * kk), (0.56, 3.6 * kk), (0.36, 3 * kk)):
         poly(ribbon(sp(k, 0.4), lens(n, wd, 0.8)), SKIN)
     for k in (0.9, 0.71, 0.53):
-        line(sp(k, 0.4), 2.2, G(95))
+        line(sp(k, 0.4), 2.2 * kk, G(95))
     # dedos de espuma
     for j in np.linspace(int(n * 0.22), int(n * 0.6), 5).astype(int):
         p = outer[j]; o = (p - np.array([cx, cy])); o /= np.linalg.norm(o) + 1e-9
@@ -97,8 +97,8 @@ def wave(cx, cy, R, flip=1):
         dr = o * 0.7 + tg * 0.7; dr /= np.linalg.norm(dr)
         pr = np.array([-dr[1], dr[0]]); L = R * (0.24 + 0.12 * random.random())
         c = catmull([p - o * 3, p + dr * L * 0.5 + pr * L * 0.10, p + dr * L + pr * L * 0.06], n=8)
-        poly(ribbon(c, lin(len(c), 10, 3)), SKIN)
-        disc(c[-1], 6, SKIN)
+        poly(ribbon(c, lin(len(c), 10 * kk, 3)), SKIN)
+        disc(c[-1], 6 * kk, SKIN)
         if random.random() < 0.6: disc(c[-1] + dr * 22, 3.5 + 2 * random.random(), SKIN)
     # ondulacoes de base
     for k in ():
@@ -121,7 +121,7 @@ def kaze(x0, y0, L, thick, amp=18, wl=520, gdir=1, curl=True):
         c = np.vstack([c, cu[1:]])
     wp = np.r_[lens(60, thick, 0.55, 3), lin(len(c) - 60, thick * 0.35, 3)] if curl else lens(len(c), thick, 0.55, 3)
     poly(ribbon(c, wp + 8), SKIN)
-    a, b = (BLACK, G(70)) if gdir > 0 else (G(70), BLACK)
+    a, b = (BLACK, G(46)) if gdir > 0 else (G(46), BLACK)
     grad_ribbon(c, wp, a, b)
     for off in (-0.28, 0.0, 0.28):
         t_, n_ = frame(c); cc = c + n_ * (wp[:, None] * off)
@@ -227,12 +227,12 @@ def head():
 # ---------------------------------------------------------------- CORPO DO DRAGAO
 def body_path():
     x0, y0 = 640.0, 500.0
-    TX, TY = 3.05 * W, 2350.0
+    TX, TY = 1.55 * W, 760.0
     s = np.linspace(0, 1, 2500)
     bx = x0 - TX * s; by = y0 + TY * s
     bt = np.array([-TX, TY]) / math.hypot(TX, TY); bn = np.array([-bt[1], bt[0]])
-    amp = 118 * np.minimum(1, s / 0.07) * (1 - 0.35 * s)
-    und = amp * np.sin(2 * math.pi * 5.6 * s + 0.4)
+    amp = 95 * np.minimum(1, s / 0.07) * (1 - 0.35 * s)
+    und = amp * np.sin(2 * math.pi * 2.6 * s + 0.4)
     P = np.stack([bx + und * bn[0], by + und * bn[1]], 1)
     P = resample(P, 4.0)
     sn = np.linspace(0, 1, len(P))
@@ -342,17 +342,17 @@ def build():
     rows = []
     y = 150
     while y < 2900:
-        rows.append(y); y += random.choice([170, 190, 210])
+        rows.append(y); y += random.choice([170, 190, 210]) if y < 1280 else random.choice([250, 275, 300])
     for ri, y in enumerate(rows):
         if 1280 < y < 1500: continue
         x = -150 + (170 if ri % 2 else 0) + random.uniform(-40, 40)
         while x < W + 200:
-            R = random.uniform(105, 150)
+            R = random.uniform(105, 150) if y < 1280 else random.uniform(175, 235)
             fl = 1 if random.random() < 0.82 else -1
             for ox in (-W, 0, W):
                 OX = ox
                 if -250 < x + ox < W + 250: wave(x, y + random.uniform(-25, 25) if False else y, R, fl)
-            x += random.uniform(255, 320)
+            x += random.uniform(255, 320) if y < 1280 else random.uniform(340, 400)
     # barras de vento
     for (y0, n, th, gd) in ((1330, 4, 52, 1), (2865, 3, 50, -1)):
         pass
@@ -362,6 +362,12 @@ def build():
                 OX = ox
                 kaze(k * 700 - 160 + r * 130 + ox * 0 , 1290 + r * 46, 880, 54 - r * 2, amp=14, wl=620, gdir=1 if r % 2 == 0 else -1, curl=(r % 2 == 0))
     OX = 0
+    for yb in (1640, 2010, 2380):
+        for k in range(2):
+            for ox in (-W, 0, W):
+                OX = ox
+                kaze(k * 700 - 250 + (yb % 400), yb, 860, 58, amp=26, wl=600, gdir=1 if (yb // 10) % 2 else -1, curl=True)
+    OX = 0
     for r in range(3):
         for k in range(2):
             for ox in (-W, 0, W):
@@ -370,14 +376,14 @@ def build():
     OX = 0
     # dragao (corpo percorre 5 posicoes de embrulho)
     rng = random.Random(5)
-    for ox in range(0, int(5 * W) + 1, W):
+    for ox in range(0, int(2.6 * W) + 1, W):
         OX = ox
         body(random.Random(5))
-    for i, dx, ln in ((int(len(P) * 0.115), -1, -1), (int(len(P) * 0.27), 1, 1), (int(len(P) * 0.50), -1, 1), (int(len(P) * 0.70), 1, -1)):
-        for ox in range(0, int(5 * W) + 1, W):
+    for i, dx, ln in ((int(len(P) * 0.2), -1, -1), (int(len(P) * 0.55), 1, 1)):
+        for ox in range(0, int(2.6 * W) + 1, W):
             OX = ox
             if visible(i, 150): leg(i, dx, ln)
-    for ox in range(0, int(5 * W) + 1, W):
+    for ox in range(0, int(2.6 * W) + 1, W):
         OX = ox
         if visible(len(P) - 1, 260): tail_tuft()
     # cabeca (com wrap)

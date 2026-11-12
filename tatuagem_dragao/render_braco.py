@@ -89,15 +89,15 @@ def font(sz, bold=False):
 
 
 def sheet_views():
-    views = [("1 · VISTA FRONTAL", 0.75), ("2 · LATERAL EXTERNA", 0.50), ("3 · POSTERIOR", 0.25), ("4 · INTERNA", 0.0)]
+    views = [("1 · VISTA EXTERNA", 0.50), ("2 · VISTA INTERNA", 0.0), ("3 · VISTA POSTERIOR", 0.25), ("4 · VISTA FRONTAL", 0.75)]
     ims = [render_view(f) for _, f in views]
     vw, vh = ims[0].size
     pad = 30; top = 150; bot = 90
     Wd = pad + len(ims) * (vw + pad); Hd = top + vh + bot
     sh = Image.new("RGB", (Wd, Hd), (30, 31, 37))
     d = ImageDraw.Draw(sh)
-    d.text((pad, 34), "IREZUMI FULL SLEEVE  ·  RYŪ PRETO E VERMELHO", font=font(46, True), fill=(235, 232, 226))
-    d.text((pad, 98), "Um único dragão em espiral, ombro → punho  ·  ondas Nami, barras Kaze e preto sólido  ·  paleta: #080808 / #B5121B + pele", font=font(24), fill=(170, 168, 165))
+    d.text((pad, 34), "IREZUMI FULL SLEEVE  ·  NAMI & KAZE COM RYŪ NO OMBRO", font=font(46, True), fill=(235, 232, 226))
+    d.text((pad, 98), "Dragão só no ombro e bíceps  ·  ondas Nami e barras Kaze dominam cotovelo, antebraço e punho  ·  paleta: #080808 / #B5121B + pele", font=font(24), fill=(170, 168, 165))
     for k, ((name, _), im) in enumerate(zip(views, ims)):
         x = pad + k * (vw + pad)
         sh.paste(im, (x, top))
@@ -123,7 +123,7 @@ def sheet_flat():
     x0, y0 = m + 60, 220
     d.rectangle([x0, y0, x0 + tw, y0 + th], outline=(120, 120, 120), width=3)
     d.text((Wd // 2, 50), "ARTE PLANIFICADA 360° · REFERÊNCIA PARA DECALQUE", font=font(52, True), fill=(10, 10, 10), anchor="mm")
-    d.text((Wd // 2, 120), "Ryū preto e vermelho · ombro (topo) → punho (base) · as bordas esquerda e direita se encontram (continuidade 360°)", font=font(26), fill=(70, 70, 70), anchor="mm")
+    d.text((Wd // 2, 120), "Nami e Kaze + Ryū no ombro/bíceps · ombro (topo) → punho (base) · as bordas esquerda e direita se encontram (continuidade 360°)", font=font(26), fill=(70, 70, 70), anchor="mm")
     for name, fr in (("INTERNA", 0.0), ("POSTERIOR", 0.25), ("EXTERNA", 0.50), ("FRONTAL", 0.75), ("INTERNA", 1.0)):
         x = x0 + int(fr * tw)
         d.line([(x, y0 - 26), (x, y0)], fill=(181, 18, 27), width=4)
