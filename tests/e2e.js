@@ -161,6 +161,7 @@ async function rodar(browser, base, perfil, opcoesContexto, configurado) {
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.waitForFunction(() => [...document.querySelectorAll(".marca__logo, .hero__logo")].every((i) => i.complete && i.naturalWidth > 0));
     assert.match(await page.locator(".hero .sobretitulo").innerText(), /Francisco Morato/i);
+    assert.match(await page.locator(".hero h1").innerText(), /^SEU CORPO NÃO NASCEU\s+PARA FICAR PARADO\.$/);
     assert.match(await page.title(), /Francisco Morato/);
   });
 
